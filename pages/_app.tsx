@@ -1,8 +1,29 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import type { AppProps } from 'next/app';
+import Head from 'next/head';
+import '../styles/globals.scss';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <ThemeProvider
+      theme={createTheme({
+        palette: {
+          mode: 'dark',
+        },
+      })}
+    >
+      <Head>
+        <title>Socialize</title>
+        <meta
+          name='description'
+          content='Socialize with people from all around the world!'
+        />
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+      <CssBaseline />
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;
