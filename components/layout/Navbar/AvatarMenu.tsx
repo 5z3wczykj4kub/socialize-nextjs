@@ -7,7 +7,6 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { MouseEvent, useState } from 'react';
 
@@ -36,22 +35,18 @@ const AvatarMenu = () => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
-        <Link href='/users/1'>
-          <MenuItem>
-            <ListItemIcon>
-              <Person fontSize='small' />
-            </ListItemIcon>
-            Profile
-          </MenuItem>
-        </Link>
-        <Link href='/settings'>
-          <MenuItem>
-            <ListItemIcon>
-              <Settings fontSize='small' />
-            </ListItemIcon>
-            Settings
-          </MenuItem>
-        </Link>
+        <MenuItem>
+          <ListItemIcon>
+            <Person fontSize='small' />
+          </ListItemIcon>
+          Profile
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon>
+            <Settings fontSize='small' />
+          </ListItemIcon>
+          Settings
+        </MenuItem>
         <Divider />
         <MenuItem onClick={handleSignOutMenuItemClick}>
           <ListItemIcon>

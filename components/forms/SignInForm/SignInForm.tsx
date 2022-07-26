@@ -4,11 +4,13 @@ import {
   Divider,
   IconButton,
   InputAdornment,
+  Link as MuiLink,
   Stack,
   Typography,
 } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
+import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
 import initialValues from './initialValues';
 import validationSchema from './validationSchema';
@@ -64,6 +66,11 @@ const SignInForm = () => {
                 ),
               }}
             />
+            <Link href='/sign-up'>
+              <MuiLink sx={{ cursor: 'pointer' }}>
+                Don't have an account yet? Sign up now!
+              </MuiLink>
+            </Link>
             <Button type='submit' variant='contained' disabled={!isValid}>
               Sign in
             </Button>
