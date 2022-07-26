@@ -9,23 +9,26 @@ import {
   Link as MuiLink,
   Radio,
   Stack,
-  TextField as MuiTextField,
   Typography,
 } from '@mui/material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { formatISO } from 'date-fns';
 import { Field, Form, Formik } from 'formik';
 import { RadioGroup, TextField } from 'formik-mui';
+import { DatePicker } from 'formik-mui-x-date-pickers';
 import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
 import initialValues from './initialValues';
 import styles from './SignUpForm.module.scss';
+import validationSchema from './validationSchema';
+
+type SignUpFormValues = typeof initialValues;
 
 const SignUpForm = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
-  const [dateOfBirth, setDateOfBirth] = useState();
 
   const handleShowPasswordClick = () =>
     setIsPasswordVisible((prevState) => !prevState);
@@ -40,17 +43,24 @@ const SignUpForm = () => {
     event: MouseEvent<HTMLButtonElement>
   ) => event.preventDefault();
 
-  const handleDateOfBirthChange = (
-    value: any,
-    keyboardInputValue?: string | undefined
-  ) => setDateOfBirth(value);
-
-  const handleSignUpFormSubmit = (values: typeof initialValues) => {};
+  const handleSignUpFormSubmit = (values: SignUpFormValues) => {
+    /**
+     * TODO:
+     * Send this payload to an API route.
+     */
+    const payload: SignUpFormValues = {
+      ...values,
+      dateOfBirth: formatISO(new Date(values.dateOfBirth), {
+        representation: 'date',
+      }),
+      residence: values.residence.trim(),
+    };
+  };
 
   return (
     <Formik
       initialValues={initialValues}
-      // validationSchema={validationSchema}
+      validationSchema={validationSchema}
       onSubmit={handleSignUpFormSubmit}
     >
       {({ isSubmitting, isValid }) => (
@@ -138,16 +148,13 @@ const SignUpForm = () => {
               />
             </Field>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
+              <Field
+                component={DatePicker}
+                name='dateOfBirth'
+                label='Date of birth'
                 openTo='year'
                 views={['year', 'month', 'day']}
-                label='Date of birth'
-                value={dateOfBirth}
-                onChange={handleDateOfBirthChange}
-                disabled={isSubmitting}
-                renderInput={(params) => (
-                  <MuiTextField {...params} size='small' />
-                )}
+                textField={{ size: 'small' }}
               />
             </LocalizationProvider>
             <Field
@@ -171,5 +178,7 @@ const SignUpForm = () => {
     </Formik>
   );
 };
+
+export type { SignUpFormValues };
 
 export default SignUpForm;
