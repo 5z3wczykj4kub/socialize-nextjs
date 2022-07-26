@@ -32,7 +32,7 @@ const SignInForm = () => {
       validationSchema={validationSchema}
       onSubmit={handleSignInFormSubmit}
     >
-      {({ isValid }) => (
+      {({ isSubmitting, isValid }) => (
         <Form noValidate>
           <Stack spacing={2.5}>
             <Typography variant='h6' align='center'>
@@ -71,7 +71,11 @@ const SignInForm = () => {
                 Don't have an account yet? Sign up now!
               </MuiLink>
             </Link>
-            <Button type='submit' variant='contained' disabled={!isValid}>
+            <Button
+              type='submit'
+              variant='contained'
+              disabled={!isValid || isSubmitting}
+            >
               Sign in
             </Button>
           </Stack>

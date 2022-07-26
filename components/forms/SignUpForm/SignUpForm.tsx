@@ -55,6 +55,7 @@ const SignUpForm = () => {
       }),
       residence: values.residence.trim(),
     };
+    console.log('payload', payload);
   };
 
   return (
@@ -169,7 +170,11 @@ const SignUpForm = () => {
                 Already have an account? Sign in!
               </MuiLink>
             </Link>
-            <Button type='submit' variant='contained' disabled={!isValid}>
+            <Button
+              type='submit'
+              variant='contained'
+              disabled={!isValid || isSubmitting}
+            >
               Sign up
             </Button>
           </Stack>
