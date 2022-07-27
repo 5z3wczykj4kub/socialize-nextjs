@@ -19,6 +19,7 @@ import { RadioGroup, TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-x-date-pickers';
 import Link from 'next/link';
 import { MouseEvent, useState } from 'react';
+import { useSignUpMutation } from '../../../api';
 import initialValues from './initialValues';
 import styles from './SignUpForm.module.scss';
 import validationSchema from './validationSchema';
@@ -43,11 +44,9 @@ const SignUpForm = () => {
     event: MouseEvent<HTMLButtonElement>
   ) => event.preventDefault();
 
+  const [signUp] = useSignUpMutation();
+
   const handleSignUpFormSubmit = (values: SignUpFormValues) => {
-    /**
-     * TODO:
-     * Send this payload to an API route.
-     */
     const payload: SignUpFormValues = {
       ...values,
       dateOfBirth: formatISO(new Date(values.dateOfBirth), {
@@ -55,7 +54,7 @@ const SignUpForm = () => {
       }),
       residence: values.residence.trim(),
     };
-    console.log('payload', payload);
+    signUp(payload);
   };
 
   return (
@@ -166,7 +165,7 @@ const SignUpForm = () => {
               label='Residence'
             />
             <Link href='/sign-in'>
-              <MuiLink className={styles.link}>
+              <MuiLink className={styles.link} href='/sign-in'>
                 Already have an account? Sign in!
               </MuiLink>
             </Link>
