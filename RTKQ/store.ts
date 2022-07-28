@@ -1,28 +1,16 @@
-import {
-  configureStore,
-  isRejected,
-  Middleware,
-  MiddlewareAPI,
-} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
 import type { TypedUseSelectorHook } from 'react-redux';
 import { useDispatch, useSelector } from 'react-redux';
-import { api } from './api';
-
-// TODO: Move somewhere else
-const errorMiddleware: Middleware =
-  (api: MiddlewareAPI) => (next) => (action) => {
-    if (isRejected(action)) {
-      alert(action.payload.data.message);
-    }
-    return next(action);
-  };
+import { api } from '../api';
+import { errorMiddleware } from './middleware';
+import snackbarReducer from './snackbarSlice';
 
 const store = configureStore({
   reducer: {
+    snackbar: snackbarReducer,
     [api.reducerPath]: api.reducer,
   },
-
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware, errorMiddleware),
 });
