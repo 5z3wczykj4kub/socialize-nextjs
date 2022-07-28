@@ -10,6 +10,8 @@ import {
   Radio,
   Stack,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -56,6 +58,29 @@ const SignUpForm = () => {
     };
     signUp(payload);
   };
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
+  const firstNameTextField = (
+    <Field
+      component={TextField}
+      size='small'
+      type='text'
+      name='firstName'
+      label='First name'
+    />
+  );
+
+  const lastNameTextField = (
+    <Field
+      component={TextField}
+      size='small'
+      type='text'
+      name='lastName'
+      label='Last name'
+    />
+  );
 
   return (
     <Formik
@@ -121,6 +146,17 @@ const SignUpForm = () => {
                 ),
               }}
             />
+            {matches ? (
+              <Stack direction='row' spacing={2}>
+                {firstNameTextField}
+                {lastNameTextField}
+              </Stack>
+            ) : (
+              <>
+                {firstNameTextField}
+                {lastNameTextField}
+              </>
+            )}
             <FormLabel>Gender</FormLabel>
             <Field
               className={styles.gender}
@@ -160,7 +196,7 @@ const SignUpForm = () => {
             <Field
               component={TextField}
               size='small'
-              type='residence'
+              type='text'
               name='residence'
               label='Residence'
             />

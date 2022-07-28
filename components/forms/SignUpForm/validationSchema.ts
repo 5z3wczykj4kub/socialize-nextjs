@@ -1,4 +1,4 @@
-import { object, ref, string } from 'yup';
+import { date, object, ref, string } from 'yup';
 
 const passwordValidation = string()
   .required('Please enter your password')
@@ -14,8 +14,13 @@ const validationSchema = object({
     [ref('password')],
     "Passwords don't match"
   ),
+  firstName: string().required('Please enter your first name'),
+  lastName: string().required('Please enter your last name'),
   gender: string().required('Please select your gender'),
-  dateOfBirth: string().required('Please enter your date of birth'),
+  dateOfBirth: date()
+    .required('Please enter your date of birth')
+    .typeError('Invalid date format')
+    .nullable(),
   residence: string().trim().required('Please enter your residence'),
 });
 

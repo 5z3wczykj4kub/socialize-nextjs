@@ -13,14 +13,12 @@ const SignIn: NextPage = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100vh',
-          pt: { xs: 7, sm: 8 },
+          minHeight: { xs: 'calc(100vh - 56px)', sm: 'calc(100vh - 64px)' },
+          transform: { xs: 'translateY(56px)', sm: 'translateY(64px)' },
+          py: { xs: 2, sm: 3 },
         }}
       >
-        <Paper
-          elevation={4}
-          sx={{ width: '100%', maxWidth: 420 /* 🌿🥦🌳 */, p: 2.5 }}
-        >
+        <Paper elevation={4} sx={{ width: '100%', maxWidth: 440, p: 2.5 }}>
           <SignInForm />
         </Paper>
       </Container>
