@@ -48,16 +48,11 @@ const SignUpForm = () => {
 
   const [signUp] = useSignUpMutation();
 
-  const handleSignUpFormSubmit = (values: SignUpFormValues) => {
-    const payload: SignUpFormValues = {
+  const handleSignUpFormSubmit = (values: SignUpFormValues) =>
+    signUp({
       ...values,
-      dateOfBirth: formatISO(new Date(values.dateOfBirth), {
-        representation: 'date',
-      }),
       residence: values.residence.trim(),
-    };
-    signUp(payload);
-  };
+    });
 
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
