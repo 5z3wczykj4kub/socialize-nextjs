@@ -1,6 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import {
-  Button,
   Divider,
   IconButton,
   InputAdornment,
@@ -11,9 +11,13 @@ import {
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { MouseEvent, useState } from 'react';
+import { useSignInMutation } from '../../../api';
 import initialValues from './initialValues';
 import validationSchema from './validationSchema';
+
+type SignInFormValues = typeof initialValues;
 
 const SignInForm = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -24,7 +28,16 @@ const SignInForm = () => {
   const handleShowPasswordMouseDown = (event: MouseEvent<HTMLButtonElement>) =>
     event.preventDefault();
 
-  const handleSignInFormSubmit = (values: typeof initialValues) => {};
+  const [signIn, { isLoading: isSigningIn }] = useSignInMutation();
+
+  const router = useRouter();
+
+  const handleSignInFormSubmit = async (values: typeof initialValues) => {
+    try {
+      await signIn(values).unwrap();
+      router.push('/');
+    } catch (error) {}
+  };
 
   return (
     <Formik
@@ -71,18 +84,23 @@ const SignInForm = () => {
                 Don't have an account yet? Sign up now!
               </MuiLink>
             </Link>
-            <Button
+            <LoadingButton
               type='submit'
               variant='contained'
+              loading={isSigningIn}
+              loadingPosition='end'
               disabled={!isValid || isSubmitting}
+              fullWidth
             >
               Sign in
-            </Button>
+            </LoadingButton>
           </Stack>
         </Form>
       )}
     </Formik>
   );
 };
+
+export type { SignInFormValues };
 
 export default SignInForm;

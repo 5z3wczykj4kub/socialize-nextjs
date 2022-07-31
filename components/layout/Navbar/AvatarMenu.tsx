@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { MouseEvent, useState } from 'react';
+import { useLazySignOutQuery } from '../../../api';
 
 const AvatarMenu = () => {
   const [avatarElement, setAvatarElement] = useState<HTMLElement | null>(null);
@@ -20,7 +21,15 @@ const AvatarMenu = () => {
 
   const router = useRouter();
 
-  const handleSignOutMenuItemClick = () => router.push('/sign-in');
+  const [signOut] = useLazySignOutQuery();
+
+  const handleSignOutMenuItemClick = async () => {
+    try {
+      // TODO: Handle loading state
+      await signOut().unwrap();
+      router.push('/sign-in');
+    } catch (error) {}
+  };
 
   return (
     <>

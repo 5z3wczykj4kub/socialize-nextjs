@@ -25,18 +25,14 @@ const signUpApiHandler: NextApiHandler = async (req, res) => {
     if (isEmailAlreadyUsed)
       return res.status(422).json({ message: 'Email already used' });
 
-    bcrypt.genSalt(10, (error, salt) => {
-      if (error) return res.status(500).end();
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(user.password, salt);
 
-      bcrypt.hash(user.password, salt, async (error, hash) => {
-        if (error) return res.status(500).end();
+    user.password = hashedPassword;
+    req.session.userId = user.id;
+    await Promise.all([user.save(), req.session.save()]);
 
-        user.password = hash;
-        req.session.userId = user.id;
-        await Promise.all([user.save(), req.session.save()]);
-        return res.status(201).end();
-      });
-    });
+    return res.status(201).end();
   } catch (error) {
     const { message, errors } = error as ValidationError;
     return res.status(422).json({ message, errors });

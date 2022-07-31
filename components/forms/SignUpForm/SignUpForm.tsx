@@ -1,6 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import {
-  Button,
   Divider,
   FormControlLabel,
   FormLabel,
@@ -15,11 +15,11 @@ import {
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { formatISO } from 'date-fns';
 import { Field, Form, Formik } from 'formik';
 import { RadioGroup, TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-x-date-pickers';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { MouseEvent, useState } from 'react';
 import { useSignUpMutation } from '../../../api';
 import initialValues from './initialValues';
@@ -46,13 +46,19 @@ const SignUpForm = () => {
     event: MouseEvent<HTMLButtonElement>
   ) => event.preventDefault();
 
-  const [signUp] = useSignUpMutation();
+  const [signUp, { isLoading: isSigningUp }] = useSignUpMutation();
 
-  const handleSignUpFormSubmit = (values: SignUpFormValues) =>
-    signUp({
-      ...values,
-      residence: values.residence.trim(),
-    });
+  const router = useRouter();
+
+  const handleSignUpFormSubmit = async (values: SignUpFormValues) => {
+    try {
+      await signUp({
+        ...values,
+        residence: values.residence.trim(),
+      }).unwrap();
+      router.push('/');
+    } catch (error) {}
+  };
 
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -200,13 +206,16 @@ const SignUpForm = () => {
                 Already have an account? Sign in!
               </MuiLink>
             </Link>
-            <Button
+            <LoadingButton
               type='submit'
               variant='contained'
+              loading={isSigningUp}
+              loadingPosition='end'
               disabled={!isValid || isSubmitting}
+              fullWidth
             >
               Sign up
-            </Button>
+            </LoadingButton>
           </Stack>
         </Form>
       )}
