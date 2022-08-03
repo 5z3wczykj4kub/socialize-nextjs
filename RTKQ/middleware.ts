@@ -1,9 +1,13 @@
-import { isRejected, Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
+import {
+  isRejectedWithValue,
+  Middleware,
+  MiddlewareAPI,
+} from '@reduxjs/toolkit';
 import { showSnackbar } from './snackbarSlice';
 
 const errorMiddleware: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
-    if (isRejected(action)) {
+    if (isRejectedWithValue(action)) {
       api.dispatch(
         showSnackbar({
           severity: 'error',
