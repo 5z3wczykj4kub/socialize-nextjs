@@ -1,11 +1,15 @@
 import { AppBar, Button, Container, Stack, Toolbar } from '@mui/material';
 import Link from 'next/link';
-import AvatarMenu from './AvatarMenu';
 import Logo from './Logo';
 import NotificationsButton from './NotificationsButton';
+import ProfileMenu from './ProfileMenu';
 import SearchBar from './SearchBar';
 
-const Authenticated = () => (
+interface AuthenticatedProps {
+  profileId: string;
+}
+
+const Authenticated = ({ profileId }: AuthenticatedProps) => (
   <AppBar>
     <Container maxWidth='lg'>
       <Toolbar disableGutters>
@@ -24,7 +28,7 @@ const Authenticated = () => (
             spacing={2}
           >
             <NotificationsButton />
-            <AvatarMenu />
+            <ProfileMenu profileId={profileId} />
           </Stack>
         </Stack>
       </Toolbar>

@@ -1,7 +1,26 @@
 import { Container, Paper } from '@mui/material';
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import SignInForm from '../../components/forms/SignInForm/SignInForm';
 import Navbar from '../../components/layout/Navbar';
+import { withSessionSsr } from '../../lib/session';
+
+const getServerSideProps: GetServerSideProps = withSessionSsr(
+  async ({ req }) => {
+    const { profileId } = req.session;
+
+    if (profileId)
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+
+    return {
+      props: {},
+    };
+  }
+);
 
 const SignIn: NextPage = () => {
   return (
@@ -25,5 +44,7 @@ const SignIn: NextPage = () => {
     </>
   );
 };
+
+export { getServerSideProps };
 
 export default SignIn;

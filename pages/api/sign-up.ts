@@ -18,19 +18,21 @@ const signUpApiHandler: NextApiHandler = async (req, res) => {
 
     await MongoDBConnector();
 
-    const user = new User(signUpFormValues) as UserModelInstance;
+    const profile = new User(signUpFormValues) as UserModelInstance;
 
-    const isEmailAlreadyUsed = !!(await User.count({ email: user.email }));
+    const isEmailAlreadyUsed = !!(await User.count({
+      email: profile.email,
+    }));
 
     if (isEmailAlreadyUsed)
       return res.status(422).json({ message: 'Email already used' });
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(user.password, salt);
+    const hashedPassword = await bcrypt.hash(profile.password, salt);
 
-    user.password = hashedPassword;
-    req.session.userId = user.id;
-    await Promise.all([user.save(), req.session.save()]);
+    profile.password = hashedPassword;
+    req.session.profileId = profile.id;
+    await Promise.all([profile.save(), req.session.save()]);
 
     return res.status(201).end();
   } catch (error) {

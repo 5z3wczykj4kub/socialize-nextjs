@@ -18,17 +18,17 @@ const signInApiHandler: NextApiHandler = async (req, res) => {
 
     await MongoDBConnector();
 
-    const user = (await User.findOne({ email })) as UserModelInstance;
+    const profile = (await User.findOne({ email })) as UserModelInstance;
 
-    if (!user)
+    if (!profile)
       return res.status(401).json({ message: 'Incorrect email or password' });
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(password, profile.password);
 
     if (!isPasswordCorrect)
       return res.status(401).json({ message: 'Incorrect email or password' });
 
-    req.session.userId = user.id;
+    req.session.profileId = profile.id;
     await req.session.save();
 
     return res.end();

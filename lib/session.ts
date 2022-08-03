@@ -7,7 +7,7 @@ import {
 
 declare module 'iron-session' {
   interface IronSessionData {
-    userId: string;
+    profileId: string;
   }
 }
 
