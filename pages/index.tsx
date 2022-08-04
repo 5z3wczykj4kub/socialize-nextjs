@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import Navbar from '../components/layout/Navbar';
+import Navbar from '../components/layout/Navbar/Navbar';
 import connectToMongoDB from '../lib/db/connect';
 import { withSessionSsr } from '../lib/session';
 import User, { User as IUser, UserModelInstance } from '../models/User';

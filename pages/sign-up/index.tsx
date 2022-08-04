@@ -1,7 +1,7 @@
 import { Container, Paper } from '@mui/material';
 import type { GetServerSideProps, NextPage } from 'next';
 import SignUpForm from '../../components/forms/SignUpForm/SignUpForm';
-import Navbar from '../../components/layout/Navbar';
+import Navbar from '../../components/layout/Navbar/Navbar';
 import { withSessionSsr } from '../../lib/session';
 
 const getServerSideProps: GetServerSideProps = withSessionSsr(
