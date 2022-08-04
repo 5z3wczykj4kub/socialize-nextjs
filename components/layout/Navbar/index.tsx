@@ -1,4 +1,12 @@
-import { AppBar, Button, Container, Stack, Toolbar } from '@mui/material';
+import {
+  AppBar,
+  Button,
+  Container,
+  Stack,
+  Toolbar,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import Link from 'next/link';
 import Logo from './Logo';
 import NotificationsButton from './NotificationsButton';
@@ -9,32 +17,38 @@ interface AuthenticatedProps {
   profileId: string;
 }
 
-const Authenticated = ({ profileId }: AuthenticatedProps) => (
-  <AppBar>
-    <Container maxWidth='lg'>
-      <Toolbar disableGutters>
-        <Stack
-          direction='row'
-          alignItems='center'
-          justifyContent='space-between'
-          width='100%'
-        >
-          <Logo />
-          <SearchBar />
+const Authenticated = ({ profileId }: AuthenticatedProps) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
+  return (
+    <AppBar>
+      <Container maxWidth='lg'>
+        <Toolbar disableGutters>
           <Stack
             direction='row'
-            justifyContent='center'
             alignItems='center'
-            spacing={2}
+            justifyContent='space-between'
+            width='100%'
+            spacing={matches ? 0 : 2}
           >
-            <NotificationsButton />
-            <ProfileMenu profileId={profileId} />
+            {matches && <Logo />}
+            <SearchBar />
+            <Stack
+              direction='row'
+              justifyContent='center'
+              alignItems='center'
+              spacing={2}
+            >
+              <NotificationsButton />
+              <ProfileMenu profileId={profileId} />
+            </Stack>
           </Stack>
-        </Stack>
-      </Toolbar>
-    </Container>
-  </AppBar>
-);
+        </Toolbar>
+      </Container>
+    </AppBar>
+  );
+};
 
 const Unauthenticated = () => (
   <AppBar>
