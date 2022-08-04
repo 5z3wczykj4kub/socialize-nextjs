@@ -5,7 +5,7 @@ let cached = (global as any).mongoose;
 if (!cached)
   cached = (global as any).mongoose = { connection: null, promise: null };
 
-const MongoDBConnector = async () => {
+const connectToMongoDB = async () => {
   if (cached.connection) return cached.connection;
 
   if (!cached.promise)
@@ -16,4 +16,4 @@ const MongoDBConnector = async () => {
   return await cached.promise;
 };
 
-export default MongoDBConnector;
+export default connectToMongoDB;

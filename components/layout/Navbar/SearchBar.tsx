@@ -1,25 +1,26 @@
-import { Autocomplete, MenuItem, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  Avatar,
+  CircularProgress,
+  debounce,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 import { ChangeEvent, SyntheticEvent } from 'react';
 import { useLazySearchQuery } from '../../../api';
 
 const SearchBar = () => {
-  const [search, { data: users }] = useLazySearchQuery();
+  const [search, { data: users, isFetching }] = useLazySearchQuery();
 
-  /**
-   * TODO:
-   * 1. Debounce this function.
-   * 2. Handle searching (loading) states.
-   * 3. Add user avatar to menu item.
-   * 4. Test if it's necessary to abort cancelled requests.
-   */
-  const handleSearchPhraseChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const searchPhrase = event.target.value.trim();
-    if (searchPhrase.length === 0) return;
-    search(searchPhrase);
-  };
+  const handleSearchPhraseChange = debounce(
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const searchPhrase = event.target.value.trim();
+      if (searchPhrase.length === 0) return;
+      search(searchPhrase);
+    },
+    500
+  );
 
   const router = useRouter();
 
@@ -58,20 +59,40 @@ const SearchBar = () => {
       freeSolo
       size='small'
       options={options}
+      loading={isFetching}
       onChange={handleAutocompleteChange}
       filterOptions={(option) => option}
       renderOption={(props, option) => (
-        <MenuItem {...props}>{option.label}</MenuItem>
+        <MenuItem {...props} sx={{ columnGap: 2 }}>
+          <Avatar sx={{ width: 28, height: 28 }} />
+          {option.label}
+        </MenuItem>
       )}
       renderInput={(params) => (
         <TextField
           {...params}
           label='Search'
           onChange={handleSearchPhraseChange}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {isFetching ? (
+                  <CircularProgress color='inherit' size={16} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
         />
       )}
       sx={{
         width: 280,
+        '&': {
+          '.MuiOutlinedInput-root.MuiInputBase-sizeSmall': {
+            pr: 4.875,
+          },
+        },
       }}
     />
   );

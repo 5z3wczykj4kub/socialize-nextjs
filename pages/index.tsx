@@ -1,6 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Navbar from '../components/layout/Navbar';
-import MongoDBConnector from '../lib/MongoDBConnector';
+import connectToMongoDB from '../lib/db/connect';
 import { withSessionSsr } from '../lib/session';
 import User, { User as IUser, UserModelInstance } from '../models/User';
 
@@ -21,7 +21,7 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
         },
       };
 
-    await MongoDBConnector();
+    await connectToMongoDB();
 
     const profile = (await User.findById(profileId)) as UserModelInstance;
 

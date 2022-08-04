@@ -3,7 +3,7 @@ import { NextApiHandler } from 'next';
 import { ValidationError } from 'yup';
 import { SignUpFormValues } from '../../components/forms/SignUpForm/SignUpForm';
 import validationSchema from '../../components/forms/SignUpForm/validationSchema';
-import MongoDBConnector from '../../lib/MongoDBConnector';
+import connectToMongoDB from '../../lib/db/connect';
 import { withSessionRoute } from '../../lib/session';
 import User, { UserModelInstance } from '../../models/User';
 
@@ -16,7 +16,7 @@ const signUpApiHandler: NextApiHandler = async (req, res) => {
       { abortEarly: false }
     );
 
-    await MongoDBConnector();
+    await connectToMongoDB();
 
     const profile = new User(signUpFormValues) as UserModelInstance;
 
