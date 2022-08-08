@@ -7,10 +7,10 @@ import FriendsTab from './FriendsTab';
 import ProfileTab from './ProfileTab';
 
 interface ProfileTabsProps {
-  profile: Omit<User, 'password'>;
+  about: Omit<User, 'password'>;
 }
 
-const ProfileTabs = ({ profile }: ProfileTabsProps) => {
+const ProfileTabs = ({ about }: ProfileTabsProps) => {
   const [value, setValue] = useState('Profile');
 
   const handleChange = (event: SyntheticEvent, value: string) =>
@@ -32,7 +32,7 @@ const ProfileTabs = ({ profile }: ProfileTabsProps) => {
         <FriendsTab />
       </TabPanel>
       <TabPanel value='About' sx={{ mt: 1.5, p: 0 }}>
-        <AboutTab {...profile} />
+        <AboutTab {...about} />
       </TabPanel>
     </TabContext>
   );

@@ -2,11 +2,11 @@ import { User } from '../../models/User';
 import ProfileTabs from './ProfileTabs';
 
 interface ProfileBodyProps {
-  profile: Omit<User, 'password'>;
+  about: Omit<User, 'password'>;
 }
 
-const ProfileBody = ({ profile }: ProfileBodyProps) => {
-  return <ProfileTabs profile={profile} />;
+const ProfileBody = ({ about }: ProfileBodyProps) => {
+  return <ProfileTabs about={about} />;
 };
 
 export default ProfileBody;

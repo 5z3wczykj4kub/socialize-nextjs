@@ -101,7 +101,7 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
             </LoadingButton>
           )}
         </ProfileHeader>
-        <ProfileBody profile={user} />
+        <ProfileBody about={user} />
       </Container>
     </>
   );

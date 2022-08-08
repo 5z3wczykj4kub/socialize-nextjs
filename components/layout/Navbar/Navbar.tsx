@@ -17,6 +17,12 @@ interface AuthenticatedProps {
   profileId: string;
 }
 
+/**
+ * TODO:
+ * Mobile version only:
+ * replace the search bar with a button icon
+ * that will trigger the top drawer upon click.
+ */
 const Authenticated = ({ profileId }: AuthenticatedProps) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
