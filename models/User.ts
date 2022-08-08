@@ -1,10 +1,11 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, model, models, Schema, Types } from 'mongoose';
 import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm';
 
 interface User
   extends Omit<SignUpFormValues, 'confirmPassword' | 'dateOfBirth'> {
   id: string;
   dateOfBirth: Date;
+  friends: User[];
 }
 
 type UserModelInstance = Document<unknown, any, User> &
@@ -12,7 +13,7 @@ type UserModelInstance = Document<unknown, any, User> &
     format: () => void;
   };
 
-const userSchema = new mongoose.Schema<User>({
+const userSchema = new Schema<User>({
   email: {
     type: String,
     required: true,
@@ -41,6 +42,29 @@ const userSchema = new mongoose.Schema<User>({
     type: String,
     required: true,
   },
+  friends: [
+    {
+      requesterId: {
+        type: Types.ObjectId,
+        required: true,
+        ref: 'User',
+      },
+      receiverId: {
+        type: Types.ObjectId,
+        required: true,
+        ref: 'User',
+      },
+      status: {
+        type: String,
+        required: true,
+        enum: {
+          values: ['pending', 'accepted', 'rejected'],
+          message:
+            'Status must be either pending, accepted, rejected or not exist at all',
+        },
+      },
+    },
+  ],
 });
 
 userSchema.virtual('id').get(function () {
@@ -59,4 +83,4 @@ userSchema.method('format', function () {
 
 export type { User, UserModelInstance };
 
-export default mongoose.models.User || mongoose.model<User>('User', userSchema);
+export default models.User || model<User>('User', userSchema);

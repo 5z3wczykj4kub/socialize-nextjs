@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { SignInFormValues } from './components/forms/SignInForm/SignInForm';
-import { SignUpFormValues } from './components/forms/SignUpForm/SignUpForm';
-import { User } from './models/User';
+import { SignInFormValues } from '../components/forms/SignInForm/SignInForm';
+import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm';
+import { User } from '../models/User';
 
 export const api = createApi({
   reducerPath: 'api',

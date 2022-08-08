@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { MouseEvent, useState } from 'react';
-import { useLazySignOutQuery } from '../../../api';
+import { useLazySignOutQuery } from '../../../RTKQ/api';
 
 interface ProfileMenuProps {
   profileId: string;

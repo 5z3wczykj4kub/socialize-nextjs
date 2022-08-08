@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { ChangeEvent, SyntheticEvent } from 'react';
-import { useLazySearchQuery } from '../../../api';
+import { useLazySearchQuery } from '../../../RTKQ/api';
 
 const SearchBar = () => {
   const [search, { data: users, isFetching }] = useLazySearchQuery();

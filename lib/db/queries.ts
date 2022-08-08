@@ -1,6 +1,6 @@
 import User, { User as IUser } from '../../models/User';
 
-const getUsers = async (search: string = ''): Promise<IUser[]> =>
+const getUsersBySearch = async (search: string = ''): Promise<IUser[]> =>
   (
     await User.populate(
       (
@@ -17,4 +17,4 @@ const getUsers = async (search: string = ''): Promise<IUser[]> =>
     )
   ).map(({ _id }) => ({ ..._id.format() }));
 
-export { getUsers };
+export { getUsersBySearch };

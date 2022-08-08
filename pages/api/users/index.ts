@@ -1,7 +1,7 @@
 import { NextApiHandler } from 'next';
-import connectToMongoDB from '../../lib/db/connect';
-import { getUsers } from '../../lib/db/queries';
-import { withSessionRoute } from '../../lib/session';
+import connectToMongoDB from '../../../lib/db/connect';
+import { getUsersBySearch } from '../../../lib/db/queries';
+import { withSessionRoute } from '../../../lib/session';
 
 type RequestQuery = {
   search: string | undefined;
@@ -13,7 +13,7 @@ const searchApiHandler: NextApiHandler = async (req, res) => {
 
   const { search } = req.query as RequestQuery;
   await connectToMongoDB();
-  const users = await getUsers(search);
+  const users = await getUsersBySearch(search);
   return res.json(users);
 };
 

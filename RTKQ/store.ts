@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
 import type { TypedUseSelectorHook } from 'react-redux';
 import { useDispatch, useSelector } from 'react-redux';
-import { api } from '../api';
+import { api } from './api';
 import { errorMiddleware } from './middleware';
 import snackbarReducer from './snackbarSlice';
 

@@ -21,7 +21,7 @@ import { DatePicker } from 'formik-mui-x-date-pickers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { MouseEvent, useState } from 'react';
-import { useSignUpMutation } from '../../../api';
+import { useSignUpMutation } from '../../../RTKQ/api';
 import initialValues from './initialValues';
 import styles from './SignUpForm.module.scss';
 import validationSchema from './validationSchema';
