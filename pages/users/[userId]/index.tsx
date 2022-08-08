@@ -1,8 +1,9 @@
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { LoadingButton } from '@mui/lab';
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, useMediaQuery, useTheme } from '@mui/material';
 import type { GetServerSideProps, NextPage } from 'next';
 import Navbar from '../../../components/layout/Navbar/Navbar';
+import ProfileBody from '../../../components/profile/ProfileBody';
 import ProfileHeader from '../../../components/profile/ProfileHeader';
 import connectToMongoDB from '../../../lib/db/connect';
 import { withSessionSsr } from '../../../lib/session';
@@ -60,6 +61,9 @@ interface ProfileProps {
 }
 
 const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
@@ -74,17 +78,30 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
         }}
       >
         <ProfileHeader>
-          <Typography variant='h5'>{fullName}</Typography>
+          <Typography
+            variant='h5'
+            align={matches ? 'left' : 'center'}
+            sx={{
+              width: '100%',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {fullName}
+          </Typography>
           {profile.id !== user.id && (
             <LoadingButton
               variant='outlined'
               loadingPosition='end'
               endIcon={<PersonAddIcon />}
+              sx={{ flexShrink: 0 }}
             >
               Add
             </LoadingButton>
           )}
         </ProfileHeader>
+        <ProfileBody />
       </Container>
     </>
   );
