@@ -1,11 +1,16 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Paper, Tab } from '@mui/material';
 import { SyntheticEvent, useState } from 'react';
+import { User } from '../../models/User';
 import AboutTab from './AboutTab';
 import FriendsTab from './FriendsTab';
 import ProfileTab from './ProfileTab';
 
-const ProfileTabs = () => {
+interface ProfileTabsProps {
+  profile: Omit<User, 'password'>;
+}
+
+const ProfileTabs = ({ profile }: ProfileTabsProps) => {
   const [value, setValue] = useState('Profile');
 
   const handleChange = (event: SyntheticEvent, value: string) =>
@@ -27,7 +32,7 @@ const ProfileTabs = () => {
         <FriendsTab />
       </TabPanel>
       <TabPanel value='About' sx={{ mt: 1.5, p: 0 }}>
-        <AboutTab />
+        <AboutTab {...profile} />
       </TabPanel>
     </TabContext>
   );
