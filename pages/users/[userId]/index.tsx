@@ -7,7 +7,7 @@ import ProfileBody from '../../../components/profile/ProfileBody';
 import ProfileHeader from '../../../components/profile/ProfileHeader';
 import connectToMongoDB from '../../../lib/db/connect';
 import { withSessionSsr } from '../../../lib/session';
-import User, { User as IUser, UserModelInstance } from '../../../models/User';
+import User, { User as IUser } from '../../../models/User';
 
 const getServerSideProps: GetServerSideProps = withSessionSsr(
   async ({ req, params }) => {
@@ -23,7 +23,7 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     await connectToMongoDB();
 
-    const profile = (await User.findById(profileId)) as UserModelInstance;
+    const profile = await User.findById(profileId);
 
     if (!profile)
       return {
@@ -35,7 +35,7 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     const { userId } = params as { userId: string };
 
-    const user = (await User.findById(userId)) as UserModelInstance;
+    const user = await User.findById(userId);
 
     if (!user)
       return {

@@ -5,7 +5,7 @@ import { SignInFormValues } from '../../components/forms/SignInForm/SignInForm';
 import validationSchema from '../../components/forms/SignInForm/validationSchema';
 import connectToMongoDB from '../../lib/db/connect';
 import { withSessionRoute } from '../../lib/session';
-import User, { UserModelInstance } from '../../models/User';
+import User from '../../models/User';
 
 const signInApiHandler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
@@ -18,7 +18,7 @@ const signInApiHandler: NextApiHandler = async (req, res) => {
 
     await connectToMongoDB();
 
-    const profile = (await User.findOne({ email })) as UserModelInstance;
+    const profile = await User.findOne({ email });
 
     if (!profile)
       return res.status(401).json({ message: 'Incorrect email or password' });

@@ -1,17 +1,23 @@
-import mongoose, { Document, model, models, Schema, Types } from 'mongoose';
+import { Document, Model, model, models, Schema, Types } from 'mongoose';
 import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm';
 
 interface User
   extends Omit<SignUpFormValues, 'confirmPassword' | 'dateOfBirth'> {
   id: string;
   dateOfBirth: Date;
-  friends: User[];
+  friends: Friend[] | User[];
 }
 
 type UserModelInstance = Document<unknown, any, User> &
   User & {
     format: () => void;
   };
+
+interface Friend {
+  requesterId: string;
+  receiverId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+}
 
 const userSchema = new Schema<User>({
   email: {
@@ -78,9 +84,16 @@ userSchema.method('format', function () {
   delete user._id;
   delete user.password;
   delete user.__v;
+  for (const friend of user.friends) {
+    friend.id = friend._id.toHexString();
+    delete friend._id;
+    friend.requesterId = friend.requesterId.toHexString();
+    friend.receiverId = friend.receiverId.toHexString();
+  }
   return user;
 });
 
-export type { User, UserModelInstance };
+export type { User, Friend };
 
-export default models.User || model<User>('User', userSchema);
+export default (models.User as Model<UserModelInstance>) ||
+  model<User>('User', userSchema);

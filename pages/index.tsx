@@ -2,7 +2,7 @@ import type { GetServerSideProps, NextPage } from 'next';
 import Navbar from '../components/layout/Navbar/Navbar';
 import connectToMongoDB from '../lib/db/connect';
 import { withSessionSsr } from '../lib/session';
-import User, { User as IUser, UserModelInstance } from '../models/User';
+import User, { User as IUser } from '../models/User';
 
 /**
  * TODO:
@@ -23,7 +23,7 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     await connectToMongoDB();
 
-    const profile = (await User.findById(profileId)) as UserModelInstance;
+    const profile = await User.findById(profileId);
 
     if (!profile)
       return {

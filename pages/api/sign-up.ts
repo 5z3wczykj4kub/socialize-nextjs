@@ -5,7 +5,7 @@ import { SignUpFormValues } from '../../components/forms/SignUpForm/SignUpForm';
 import validationSchema from '../../components/forms/SignUpForm/validationSchema';
 import connectToMongoDB from '../../lib/db/connect';
 import { withSessionRoute } from '../../lib/session';
-import User, { UserModelInstance } from '../../models/User';
+import User from '../../models/User';
 
 const signUpApiHandler: NextApiHandler = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
@@ -18,7 +18,7 @@ const signUpApiHandler: NextApiHandler = async (req, res) => {
 
     await connectToMongoDB();
 
-    const profile = new User(signUpFormValues) as UserModelInstance;
+    const profile = new User(signUpFormValues);
 
     const isEmailAlreadyUsed = !!(await User.count({
       email: profile.email,
