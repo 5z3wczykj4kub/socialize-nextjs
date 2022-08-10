@@ -81,7 +81,7 @@ const SignInForm = () => {
             />
             <Link href='/sign-up'>
               <MuiLink sx={{ cursor: 'pointer' }} href='/sign-up'>
-                Don't have an account yet? Sign up now!
+                Don&apos;t have an account yet? Sign up now!
               </MuiLink>
             </Link>
             <LoadingButton

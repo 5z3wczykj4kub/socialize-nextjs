@@ -83,4 +83,6 @@ const Unauthenticated = () => (
   </AppBar>
 );
 
-export default { Authenticated, Unauthenticated };
+const Navbar = { Authenticated, Unauthenticated };
+
+export default Navbar;

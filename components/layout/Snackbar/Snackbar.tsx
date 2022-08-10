@@ -46,4 +46,6 @@ const Snackbar = () => {
   );
 };
 
+Alert.displayName = 'Alert';
+
 export default Snackbar;
