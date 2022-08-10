@@ -1,7 +1,7 @@
 import { Container, Typography, useMediaQuery, useTheme } from '@mui/material';
 import type { GetServerSideProps, NextPage } from 'next';
 import Navbar from '../../../components/layout/Navbar/Navbar';
-import InviteButton from '../../../components/profile/InviteButton';
+import FriendsStatusButton from '../../../components/profile/FriendsStatusButton';
 import ProfileBody from '../../../components/profile/ProfileBody';
 import ProfileHeader from '../../../components/profile/ProfileHeader';
 import connectToMongoDB from '../../../lib/db/connect';
@@ -91,7 +91,7 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
             {fullName}
           </Typography>
           {profile.id !== user.id && (
-            <InviteButton profile={profile} user={user} />
+            <FriendsStatusButton profile={profile} user={user} />
           )}
         </ProfileHeader>
         <ProfileBody about={user} />

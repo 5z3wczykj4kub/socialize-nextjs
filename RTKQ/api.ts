@@ -27,6 +27,10 @@ export const api = createApi({
     search: build.query<User[], string>({
       query: (search) => `/users?search=${search}`,
     }),
+    /**
+     * TODO:
+     * Handle canceling friend invites.
+     */
     sendFriendInvite: build.mutation<void, Omit<Friend, 'status'>>({
       query: ({ requesterId, receiverId }) => ({
         url: `/users/${requesterId}/friends?receiverId=${receiverId}`,

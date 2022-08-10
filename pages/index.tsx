@@ -6,8 +6,9 @@ import User, { User as IUser } from '../models/User';
 
 /**
  * TODO:
- * Handle authentication loading states:
+ * 1. Handle authentication loading states:
  * - signing up, signing in, signing out.
+ * 2. Handle general SSR loading states.
  */
 const getServerSideProps: GetServerSideProps = withSessionSsr(
   async ({ req }) => {

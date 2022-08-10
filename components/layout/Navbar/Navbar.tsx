@@ -19,9 +19,11 @@ interface AuthenticatedProps {
 
 /**
  * TODO:
- * Mobile version only:
+ * 1. Mobile version only:
  * replace the search bar with a button icon
  * that will trigger the top drawer upon click.
+ * 2. Consider using navbar as layout in order
+ * to persist search state.
  */
 const Authenticated = ({ profileId }: AuthenticatedProps) => {
   const theme = useTheme();

@@ -3,7 +3,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonAddDisabledIcon from '@mui/icons-material/PersonAddDisabled';
 import { FriendsStatusAction } from './getFriendsStatusAction';
 
-const getInviteButtonIconByFriendsStatusAction = (
+const getFriendsStatusButtonIconByFriendsStatusAction = (
   action: FriendsStatusAction
 ) =>
   action === 'invite' ? (
@@ -14,4 +14,4 @@ const getInviteButtonIconByFriendsStatusAction = (
     <ExpandMoreIcon />
   );
 
-export default getInviteButtonIconByFriendsStatusAction;
+export default getFriendsStatusButtonIconByFriendsStatusAction;

@@ -1,16 +1,16 @@
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
 import getFriendsStatusAction from '../../lib/functions/getFriendsStatusAction';
-import getInviteButtonIconByFriendsStatusAction from '../../lib/functions/getInviteButtonIconByFriendsStatusAction';
+import getFriendsStatusButtonIconByFriendsStatusAction from '../../lib/functions/getFriendsStatusButtonIconByFriendsStatusAction';
 import { User } from '../../models/User';
 import { useSendFriendInviteMutation } from '../../RTKQ/api';
 
-interface InviteButtonProps {
+interface FriendsStatusButtonProps {
   profile: Omit<User, 'password'>;
   user: Omit<User, 'password'>;
 }
 
-const InviteButton = ({ profile, user }: InviteButtonProps) => {
+const FriendsStatusButton = ({ profile, user }: FriendsStatusButtonProps) => {
   const [friendsStatusAction, setFriendsStatusAction] = useState(
     getFriendsStatusAction(profile, user)
   );
@@ -35,7 +35,9 @@ const InviteButton = ({ profile, user }: InviteButtonProps) => {
       variant='outlined'
       loading={isSendingFriendInvite}
       loadingPosition='end'
-      endIcon={getInviteButtonIconByFriendsStatusAction(friendsStatusAction)}
+      endIcon={getFriendsStatusButtonIconByFriendsStatusAction(
+        friendsStatusAction
+      )}
       onClick={handleLoadingButtonClick}
       sx={{ flexShrink: 0 }}
     >
@@ -44,4 +46,4 @@ const InviteButton = ({ profile, user }: InviteButtonProps) => {
   );
 };
 
-export default InviteButton;
+export default FriendsStatusButton;
