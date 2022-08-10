@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { SignInFormValues } from '../components/forms/SignInForm/SignInForm';
 import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm';
-import { User } from '../models/User';
+import { Friend, User } from '../models/User';
 
 export const api = createApi({
   reducerPath: 'api',
@@ -27,6 +27,12 @@ export const api = createApi({
     search: build.query<User[], string>({
       query: (search) => `/users?search=${search}`,
     }),
+    sendFriendInvite: build.mutation<void, Omit<Friend, 'status'>>({
+      query: ({ requesterId, receiverId }) => ({
+        url: `/users/${requesterId}/friends?receiverId=${receiverId}`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -35,4 +41,5 @@ export const {
   useSignInMutation,
   useLazySignOutQuery,
   useLazySearchQuery,
+  useSendFriendInviteMutation,
 } = api;

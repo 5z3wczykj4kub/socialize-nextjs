@@ -1,8 +1,7 @@
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { LoadingButton } from '@mui/lab';
 import { Container, Typography, useMediaQuery, useTheme } from '@mui/material';
 import type { GetServerSideProps, NextPage } from 'next';
 import Navbar from '../../../components/layout/Navbar/Navbar';
+import InviteButton from '../../../components/profile/InviteButton';
 import ProfileBody from '../../../components/profile/ProfileBody';
 import ProfileHeader from '../../../components/profile/ProfileHeader';
 import connectToMongoDB from '../../../lib/db/connect';
@@ -48,6 +47,7 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     return {
       props: {
+        key: user.id.toString(),
         profile: profile.format(),
         user: user.format(),
       },
@@ -91,14 +91,7 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
             {fullName}
           </Typography>
           {profile.id !== user.id && (
-            <LoadingButton
-              variant='outlined'
-              loadingPosition='end'
-              endIcon={<PersonAddIcon />}
-              sx={{ flexShrink: 0 }}
-            >
-              Add
-            </LoadingButton>
+            <InviteButton profile={profile} user={user} />
           )}
         </ProfileHeader>
         <ProfileBody about={user} />
