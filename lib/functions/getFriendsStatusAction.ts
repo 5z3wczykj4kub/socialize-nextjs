@@ -1,6 +1,6 @@
 import { Friend, User } from '../../models/User';
 
-type FriendsStatusAction = 'invite' | 'cancel' | 'reply';
+type FriendsStatusAction = 'invite' | 'cancel' | 'respond';
 
 const getFriendsStatusAction = (
   profile: Omit<User, 'password'>,
@@ -15,7 +15,7 @@ const getFriendsStatusAction = (
   if (friend.requesterId === profile.id && friend.status === 'pending')
     return 'cancel';
   if (friend.requesterId === user.id && friend.status === 'pending')
-    return 'reply';
+    return 'respond';
 
   throw new Error('Function returned unexpectedly');
 };

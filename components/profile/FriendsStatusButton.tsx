@@ -3,7 +3,10 @@ import { useState } from 'react';
 import getFriendsStatusAction from '../../lib/functions/getFriendsStatusAction';
 import getFriendsStatusButtonIconByFriendsStatusAction from '../../lib/functions/getFriendsStatusButtonIconByFriendsStatusAction';
 import { User } from '../../models/User';
-import { useSendFriendInviteMutation } from '../../RTKQ/api';
+import {
+  useCancelFriendInviteMutation,
+  useSendFriendInviteMutation,
+} from '../../RTKQ/api';
 
 interface FriendsStatusButtonProps {
   profile: Omit<User, 'password'>;
@@ -18,6 +21,9 @@ const FriendsStatusButton = ({ profile, user }: FriendsStatusButtonProps) => {
   const [sendFriendInvite, { isLoading: isSendingFriendInvite }] =
     useSendFriendInviteMutation();
 
+  const [cancelFriendInvite, { isLoading: isCancelingFriendInvite }] =
+    useCancelFriendInviteMutation();
+
   const handleLoadingButtonClick = async () => {
     try {
       if (friendsStatusAction === 'invite') {
@@ -27,13 +33,20 @@ const FriendsStatusButton = ({ profile, user }: FriendsStatusButtonProps) => {
         }).unwrap();
         setFriendsStatusAction('cancel');
       }
+      if (friendsStatusAction === 'cancel') {
+        await cancelFriendInvite({
+          requesterId: profile.id,
+          receiverId: user.id,
+        }).unwrap();
+        setFriendsStatusAction('invite');
+      }
     } catch (error) {}
   };
 
   return (
     <LoadingButton
       variant='outlined'
-      loading={isSendingFriendInvite}
+      loading={isSendingFriendInvite || isCancelingFriendInvite}
       loadingPosition='end'
       endIcon={getFriendsStatusButtonIconByFriendsStatusAction(
         friendsStatusAction

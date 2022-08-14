@@ -11,7 +11,7 @@ const errorMiddleware: Middleware =
       api.dispatch(
         showSnackbar({
           severity: 'error',
-          message: action.payload.data.message || 'Something went wrong',
+          message: action.payload.data?.message || 'Something went wrong',
         })
       );
     }
