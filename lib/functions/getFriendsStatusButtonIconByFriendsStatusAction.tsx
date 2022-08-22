@@ -6,7 +6,7 @@ import { FriendsStatusAction } from './getFriendsStatusAction';
 const getFriendsStatusButtonIconByFriendsStatusAction = (
   action: FriendsStatusAction
 ) =>
-  action === 'invite' ? (
+  action === 'invite' || action === 'disable' ? (
     <PersonAddIcon />
   ) : action === 'cancel' ? (
     <PersonAddDisabledIcon />

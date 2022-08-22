@@ -30,13 +30,23 @@ export const api = createApi({
     sendFriendInvite: build.mutation<void, Omit<Friend, 'status'>>({
       query: ({ requesterId, receiverId }) => ({
         url: `/users/${requesterId}/friends?receiverId=${receiverId}`,
-        method: 'POST',
+        method: 'PUT',
       }),
     }),
-    cancelFriendInvite: build.mutation<void, Omit<Friend, 'status'>>({
+    cancelInviteOrRemoveFriend: build.mutation<void, Omit<Friend, 'status'>>({
       query: ({ requesterId, receiverId }) => ({
         url: `/users/${requesterId}/friends?receiverId=${receiverId}`,
         method: 'DELETE',
+      }),
+    }),
+    respondToFriendInvite: build.mutation<
+      void,
+      Omit<Friend, 'status'> & { response: 'accept' | 'reject' }
+    >({
+      query: ({ requesterId, receiverId, response }) => ({
+        url: `/users/${requesterId}/friends?receiverId=${receiverId}`,
+        method: 'PATCH',
+        body: { response },
       }),
     }),
   }),
@@ -48,5 +58,6 @@ export const {
   useLazySignOutQuery,
   useLazySearchQuery,
   useSendFriendInviteMutation,
-  useCancelFriendInviteMutation,
+  useCancelInviteOrRemoveFriendMutation,
+  useRespondToFriendInviteMutation,
 } = api;

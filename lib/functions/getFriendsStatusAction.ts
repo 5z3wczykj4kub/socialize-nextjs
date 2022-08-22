@@ -1,6 +1,11 @@
 import { Friend, User } from '../../models/User';
 
-type FriendsStatusAction = 'invite' | 'cancel' | 'respond';
+type FriendsStatusAction =
+  | 'invite'
+  | 'cancel'
+  | 'respond'
+  | 'remove'
+  | 'disable';
 
 const getFriendsStatusAction = (
   profile: Omit<User, 'password'>,
@@ -11,11 +16,18 @@ const getFriendsStatusAction = (
     (friend) => friend.requesterId === user.id || friend.receiverId === user.id
   );
 
-  if (!friend) return 'invite';
+  if (
+    !friend ||
+    (friend.requesterId === user.id && friend.status === 'rejected')
+  )
+    return 'invite';
   if (friend.requesterId === profile.id && friend.status === 'pending')
     return 'cancel';
   if (friend.requesterId === user.id && friend.status === 'pending')
     return 'respond';
+  if (friend.requesterId === profile.id && friend.status === 'rejected')
+    return 'disable';
+  if (friend.status === 'accepted') return 'remove';
 
   throw new Error('Function returned unexpectedly');
 };
