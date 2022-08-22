@@ -1,10 +1,12 @@
 import { Container, Typography, useMediaQuery, useTheme } from '@mui/material';
 import type { GetServerSideProps, NextPage } from 'next';
+import { useState } from 'react';
 import Navbar from '../../../components/layout/Navbar/Navbar';
 import FriendsStatusButton from '../../../components/profile/FriendsStatusButton';
 import ProfileBody from '../../../components/profile/ProfileBody';
 import ProfileHeader from '../../../components/profile/ProfileHeader';
 import connectToMongoDB from '../../../lib/db/connect';
+import getFriendsStatusAction from '../../../lib/functions/getFriendsStatusAction';
 import { withSessionSsr } from '../../../lib/session';
 import User, { User as IUser } from '../../../models/User';
 
@@ -61,6 +63,13 @@ interface ProfileProps {
 }
 
 const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
+  const [isProfileBodyDisabled, setIsProfileBodyDisabled] = useState(
+    getFriendsStatusAction(profile, user) !== 'remove'
+  );
+
+  const handleAcceptFriendRequest = () => setIsProfileBodyDisabled(false);
+  const handleFriendRemove = () => setIsProfileBodyDisabled(true);
+
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -91,10 +100,15 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
             {fullName}
           </Typography>
           {profile.id !== user.id && (
-            <FriendsStatusButton profile={profile} user={user} />
+            <FriendsStatusButton
+              profile={profile}
+              user={user}
+              onAccept={handleAcceptFriendRequest}
+              onRemove={handleFriendRemove}
+            />
           )}
         </ProfileHeader>
-        <ProfileBody about={user} />
+        <ProfileBody about={user} disabled={isProfileBodyDisabled} />
       </Container>
     </>
   );

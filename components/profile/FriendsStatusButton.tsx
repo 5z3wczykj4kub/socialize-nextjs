@@ -24,9 +24,16 @@ import {
 interface FriendsStatusButtonProps {
   profile: Omit<User, 'password'>;
   user: Omit<User, 'password'>;
+  onAccept: () => void;
+  onRemove: () => void;
 }
 
-const FriendsStatusButton = ({ profile, user }: FriendsStatusButtonProps) => {
+const FriendsStatusButton = ({
+  profile,
+  user,
+  onAccept,
+  onRemove,
+}: FriendsStatusButtonProps) => {
   const [friendsStatusAction, setFriendsStatusAction] = useState(
     getFriendsStatusAction(profile, user)
   );
@@ -77,31 +84,39 @@ const FriendsStatusButton = ({ profile, user }: FriendsStatusButtonProps) => {
 
   const handleAcceptMenuItemClick = async () => {
     handleMenuClose();
-    await respondToFriendInvite({
-      requesterId: profile.id,
-      receiverId: user.id,
-      response: 'accept',
-    }).unwrap();
-    setFriendsStatusAction('remove');
+    try {
+      await respondToFriendInvite({
+        requesterId: profile.id,
+        receiverId: user.id,
+        response: 'accept',
+      }).unwrap();
+      setFriendsStatusAction('remove');
+      onAccept();
+    } catch (error) {}
   };
 
   const handleRejectMenuItemClick = async () => {
     handleMenuClose();
-    await respondToFriendInvite({
-      requesterId: profile.id,
-      receiverId: user.id,
-      response: 'reject',
-    }).unwrap();
-    setFriendsStatusAction('invite');
+    try {
+      await respondToFriendInvite({
+        requesterId: profile.id,
+        receiverId: user.id,
+        response: 'reject',
+      }).unwrap();
+      setFriendsStatusAction('invite');
+    } catch (error) {}
   };
 
   const handleRemoveMenuItemClick = async () => {
     handleMenuClose();
-    await cancelInviteOrRemoveFriend({
-      requesterId: profile.id,
-      receiverId: user.id,
-    }).unwrap();
-    setFriendsStatusAction('invite');
+    try {
+      await cancelInviteOrRemoveFriend({
+        requesterId: profile.id,
+        receiverId: user.id,
+      }).unwrap();
+      setFriendsStatusAction('invite');
+      onRemove();
+    } catch (error) {}
   };
 
   const loadingButtonRef = useRef<HTMLButtonElement>(null);

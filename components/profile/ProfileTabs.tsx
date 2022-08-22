@@ -1,6 +1,6 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Paper, Tab } from '@mui/material';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { User } from '../../models/User';
 import AboutTab from './AboutTab';
 import FriendsTab from './FriendsTab';
@@ -8,20 +8,35 @@ import ProfileTab from './ProfileTab';
 
 interface ProfileTabsProps {
   about: Omit<User, 'password'>;
+  disabled?: boolean;
 }
 
-const ProfileTabs = ({ about }: ProfileTabsProps) => {
-  const [value, setValue] = useState('Profile');
+const ProfileTabs = ({ about, disabled = false }: ProfileTabsProps) => {
+  const [value, setValue] = useState(disabled ? 'About' : 'Profile');
 
   const handleChange = (event: SyntheticEvent, value: string) =>
     setValue(value);
+
+  useEffect(() => {
+    if (disabled) setValue('About');
+  }, [disabled]);
 
   return (
     <TabContext value={value}>
       <Paper elevation={4} sx={{ mt: 1.5 }}>
         <TabList onChange={handleChange}>
-          <Tab label='Profile' value='Profile' sx={{ p: 2.5 }} />
-          <Tab label='Friends' value='Friends' sx={{ p: 2.5 }} />
+          <Tab
+            label='Profile'
+            value='Profile'
+            disabled={disabled}
+            sx={{ p: 2.5 }}
+          />
+          <Tab
+            label='Friends'
+            value='Friends'
+            disabled={disabled}
+            sx={{ p: 2.5 }}
+          />
           <Tab label='About' value='About' sx={{ p: 2.5 }} />
         </TabList>
       </Paper>
