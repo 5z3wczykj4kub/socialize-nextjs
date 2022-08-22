@@ -157,28 +157,28 @@ const FriendsStatusButton = ({ profile, user }: FriendsStatusButtonProps) => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
-        {friendsStatusAction === 'respond' && (
-          <>
-            <MenuItem
-              onClick={handleAcceptMenuItemClick}
-              sx={{ minWidth: loadingButtonWidth }}
-            >
-              <ListItemIcon>
-                <PersonAddIcon fontSize='small' />
-              </ListItemIcon>
-              Accept
-            </MenuItem>
-            <MenuItem
-              onClick={handleRejectMenuItemClick}
-              sx={{ minWidth: loadingButtonWidth }}
-            >
-              <ListItemIcon>
-                <PersonAddDisabledIcon fontSize='small' />
-              </ListItemIcon>
-              Reject
-            </MenuItem>
-          </>
-        )}
+        {friendsStatusAction === 'respond' && [
+          <MenuItem
+            key='accept'
+            onClick={handleAcceptMenuItemClick}
+            sx={{ minWidth: loadingButtonWidth }}
+          >
+            <ListItemIcon>
+              <PersonAddIcon fontSize='small' />
+            </ListItemIcon>
+            Accept
+          </MenuItem>,
+          <MenuItem
+            key='reject'
+            onClick={handleRejectMenuItemClick}
+            sx={{ minWidth: loadingButtonWidth }}
+          >
+            <ListItemIcon>
+              <PersonAddDisabledIcon fontSize='small' />
+            </ListItemIcon>
+            Reject
+          </MenuItem>,
+        ]}
         {friendsStatusAction === 'remove' && (
           <MenuItem
             onClick={handleRemoveMenuItemClick}
