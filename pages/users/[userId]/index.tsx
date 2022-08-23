@@ -8,7 +8,7 @@ import ProfileHeader from '../../../components/profile/ProfileHeader';
 import connectToMongoDB from '../../../lib/db/connect';
 import getFriendsStatusAction from '../../../lib/functions/getFriendsStatusAction';
 import { withSessionSsr } from '../../../lib/session';
-import User, { User as IUser } from '../../../models/User';
+import User, { Friend, User as IUser } from '../../../models/User';
 
 const getServerSideProps: GetServerSideProps = withSessionSsr(
   async ({ req, params }) => {
@@ -36,7 +36,19 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     const { userId } = params as { userId: string };
 
-    const user = await User.findById(userId);
+    const isFriend = (friend: Friend) =>
+      (friend.requesterId.toString() === userId ||
+        friend.receiverId.toString() === userId) &&
+      friend.status === 'accepted';
+
+    const user = await User.findById(
+      userId,
+      (profile.friends as Friend[]).some(isFriend)
+        ? {
+            notifications: 0,
+          }
+        : { friends: 0, notifications: 0 }
+    );
 
     if (!user)
       return {
@@ -64,7 +76,9 @@ interface ProfileProps {
 
 const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
   const [isProfileBodyDisabled, setIsProfileBodyDisabled] = useState(
-    getFriendsStatusAction(profile, user) !== 'remove'
+    profile.id !== user.id
+      ? getFriendsStatusAction(profile, user) !== 'remove'
+      : false
   );
 
   const handleAcceptFriendRequest = () => setIsProfileBodyDisabled(false);
@@ -77,7 +91,10 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
 
   return (
     <>
-      <Navbar.Authenticated profileId={profile.id} />
+      <Navbar.Authenticated
+        profileId={profile.id}
+        notifications={profile.notifications}
+      />
       <Container
         maxWidth='lg'
         sx={{

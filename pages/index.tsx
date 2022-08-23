@@ -49,7 +49,10 @@ interface HomeProps {
 const Home: NextPage<HomeProps> = ({ profile }) => {
   return (
     <>
-      <Navbar.Authenticated profileId={profile.id} />
+      <Navbar.Authenticated
+        profileId={profile.id}
+        notifications={profile.notifications}
+      />
     </>
   );
 };

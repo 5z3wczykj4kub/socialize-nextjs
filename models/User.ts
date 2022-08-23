@@ -6,6 +6,7 @@ interface User
   id: string;
   dateOfBirth: Date;
   friends: Friend[] | User[];
+  notifications: Notification[];
 }
 
 type UserModelInstance = Document<unknown, any, User> &
@@ -17,6 +18,13 @@ interface Friend {
   requesterId: string;
   receiverId: string;
   status: 'pending' | 'accepted' | 'rejected';
+}
+
+interface Notification {
+  message: string;
+  initiatorId: User | string;
+  createdAt?: Date;
+  read?: boolean;
 }
 
 const userSchema = new Schema<User>({
@@ -71,6 +79,29 @@ const userSchema = new Schema<User>({
       },
     },
   ],
+  notifications: [
+    {
+      message: {
+        type: String,
+        required: true,
+      },
+      initiatorId: {
+        type: Types.ObjectId,
+        required: true,
+        ref: 'User',
+      },
+      createdAt: {
+        type: Date,
+        required: true,
+        default: Date.now,
+      },
+      read: {
+        type: Boolean,
+        required: true,
+        default: false,
+      },
+    },
+  ],
 });
 
 userSchema.virtual('id').get(function () {
@@ -84,16 +115,22 @@ userSchema.method('format', function () {
   delete user._id;
   delete user.password;
   delete user.__v;
-  for (const friend of user.friends) {
+  user.friends?.forEach((friend: any) => {
     friend.id = friend._id.toHexString();
     delete friend._id;
     friend.requesterId = friend.requesterId.toHexString();
     friend.receiverId = friend.receiverId.toHexString();
-  }
+  });
+  user.notifications?.forEach((notification: any) => {
+    notification.id = notification._id.toHexString();
+    delete notification._id;
+    notification.initiatorId = notification.initiatorId.toHexString();
+    notification.createdAt = notification.createdAt.toISOString();
+  });
   return user;
 });
 
-export type { User, Friend };
+export type { User, Friend, Notification };
 
 export default (models.User as Model<UserModelInstance>) ||
   model<User>('User', userSchema);

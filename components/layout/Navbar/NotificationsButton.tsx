@@ -1,10 +1,16 @@
 import { Notifications } from '@mui/icons-material';
 import { Badge, IconButton } from '@mui/material';
+import { Notification } from '../../../models/User';
 
-const NotificationsButton = () => {
+// TODO: Consider renaming to `NotificationMenu`
+interface NotificationsButtonProps {
+  notifications: Notification[];
+}
+
+const NotificationsButton = ({ notifications }: NotificationsButtonProps) => {
   return (
     <IconButton>
-      <Badge badgeContent={1} color='primary'>
+      <Badge badgeContent={notifications.length} color='primary'>
         <Notifications />
       </Badge>
     </IconButton>

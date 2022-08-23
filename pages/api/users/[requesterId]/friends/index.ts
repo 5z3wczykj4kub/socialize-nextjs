@@ -1,8 +1,16 @@
+import { startSession } from 'mongoose';
 import { NextApiHandler } from 'next';
 import connectToMongoDB from '../../../../../lib/db/connect';
 import { withSessionRoute } from '../../../../../lib/session';
 import User, { Friend } from '../../../../../models/User';
 
+/**
+ * TODO:
+ * 1. Push notification when accepting or rejecting a friend request.
+ * 2. Create an API route to poll for.
+ * 3. Handle notifications appearance on the frontend.
+ * 4. Handle marking notifications as read.
+ */
 const friendsApiHandler: NextApiHandler = async (req, res) => {
   const { profileId } = req.session;
   if (!profileId) return res.status(401).end();
@@ -88,11 +96,26 @@ const friendsApiHandler: NextApiHandler = async (req, res) => {
       res.status(204);
     }
 
+    receiver.notifications.push({
+      initiatorId: requester.id,
+      message: `${requester.firstName} ${requester.lastName} sent you a friend request`,
+    });
+
+    const session = await startSession();
+    session.startTransaction();
+
     try {
-      await Promise.all([requester.save(), receiver.save()]);
+      await Promise.all([
+        requester.save({ session }),
+        receiver.save({ session }),
+      ]);
+      await session.commitTransaction();
       return res.end();
     } catch (error) {
+      await session.abortTransaction();
       return res.status(500).json(error);
+    } finally {
+      session.endSession();
     }
   }
 

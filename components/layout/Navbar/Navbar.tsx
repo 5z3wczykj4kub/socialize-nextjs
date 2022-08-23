@@ -8,6 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import Link from 'next/link';
+import { Notification } from '../../../models/User';
 import Logo from './Logo';
 import NotificationsButton from './NotificationsButton';
 import ProfileMenu from './ProfileMenu';
@@ -15,6 +16,7 @@ import SearchBar from './SearchBar';
 
 interface AuthenticatedProps {
   profileId: string;
+  notifications: Notification[];
 }
 
 /**
@@ -25,7 +27,7 @@ interface AuthenticatedProps {
  * 2. Consider using navbar as layout in order
  * to persist search state.
  */
-const Authenticated = ({ profileId }: AuthenticatedProps) => {
+const Authenticated = ({ profileId, notifications }: AuthenticatedProps) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -48,7 +50,7 @@ const Authenticated = ({ profileId }: AuthenticatedProps) => {
               alignItems='center'
               spacing={2}
             >
-              <NotificationsButton />
+              <NotificationsButton notifications={notifications} />
               <ProfileMenu profileId={profileId} />
             </Stack>
           </Stack>
