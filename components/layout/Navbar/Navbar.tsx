@@ -10,7 +10,7 @@ import {
 import Link from 'next/link';
 import { Notification } from '../../../models/User';
 import Logo from './Logo';
-import NotificationsButton from './NotificationsButton';
+import NotificationsMenu from './NotificationsMenu';
 import ProfileMenu from './ProfileMenu';
 import SearchBar from './SearchBar';
 
@@ -50,7 +50,7 @@ const Authenticated = ({ profileId, notifications }: AuthenticatedProps) => {
               alignItems='center'
               spacing={2}
             >
-              <NotificationsButton notifications={notifications} />
+              <NotificationsMenu notifications={notifications} />
               <ProfileMenu profileId={profileId} />
             </Stack>
           </Stack>

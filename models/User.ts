@@ -22,8 +22,8 @@ interface Friend {
 
 interface Notification {
   message: string;
-  initiatorId: User | string;
-  createdAt?: Date;
+  initiatorId: string;
+  createdAt?: Date | string;
   read?: boolean;
 }
 
