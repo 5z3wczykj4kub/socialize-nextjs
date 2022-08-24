@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { Notification } from '../../../models/User';
+import { useGetNotificationsQuery } from '../../../RTKQ/api';
 import Logo from './Logo';
 import NotificationsMenu from './NotificationsMenu';
 import ProfileMenu from './ProfileMenu';
@@ -26,10 +27,15 @@ interface AuthenticatedProps {
  * that will trigger the top drawer upon click.
  * 2. Consider using navbar as layout in order
  * to persist search state.
+ * 3. Only use polled notifications.
  */
 const Authenticated = ({ profileId, notifications }: AuthenticatedProps) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
+  const { data: polledNotifications } = useGetNotificationsQuery(null, {
+    pollingInterval: 10000, // TODO: Increase polling interval
+  });
 
   return (
     <AppBar>
@@ -50,7 +56,9 @@ const Authenticated = ({ profileId, notifications }: AuthenticatedProps) => {
               alignItems='center'
               spacing={2}
             >
-              <NotificationsMenu notifications={notifications} />
+              <NotificationsMenu
+                notifications={polledNotifications || notifications}
+              />
               <ProfileMenu profileId={profileId} />
             </Stack>
           </Stack>

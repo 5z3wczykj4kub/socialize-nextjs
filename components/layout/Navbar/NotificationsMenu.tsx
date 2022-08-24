@@ -9,12 +9,20 @@ interface NotificationsMenuProps {
   notifications: Notification[];
 }
 
+/**
+ * TODO:
+ * 1. Add loading state if only polled notifications are used.
+ * 2. Set max height.
+ * 3. Show latest on top.
+ */
 const NotificationsMenu = ({ notifications }: NotificationsMenuProps) => {
   const [notificationsButtonAnchorEl, setNotificationsButtonAnchorEl] =
     useState<HTMLElement | null>(null);
 
-  const handleNotificationsMenuOpen = (event: MouseEvent<HTMLElement>) =>
+  const handleNotificationsMenuOpen = (event: MouseEvent<HTMLElement>) => {
+    if (notifications.length === 0) return;
     setNotificationsButtonAnchorEl(event.currentTarget);
+  };
 
   const handleNotificationsMenuClose = () =>
     setNotificationsButtonAnchorEl(null);

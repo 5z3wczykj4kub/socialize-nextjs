@@ -11,7 +11,7 @@ interface User
 
 type UserModelInstance = Document<unknown, any, User> &
   User & {
-    format: () => void;
+    format: () => User;
   };
 
 interface Friend {

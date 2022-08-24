@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { SignInFormValues } from '../components/forms/SignInForm/SignInForm';
 import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm';
-import { Friend, User } from '../models/User';
+import { Friend, Notification, User } from '../models/User';
 
 export const api = createApi({
   reducerPath: 'api',
@@ -49,6 +49,9 @@ export const api = createApi({
         body: { response },
       }),
     }),
+    getNotifications: build.query<Notification[], null>({
+      query: () => '/notifications',
+    }),
   }),
 });
 
@@ -60,4 +63,5 @@ export const {
   useSendFriendInviteMutation,
   useCancelInviteOrRemoveFriendMutation,
   useRespondToFriendInviteMutation,
+  useGetNotificationsQuery,
 } = api;
