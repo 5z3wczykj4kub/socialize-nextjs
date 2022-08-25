@@ -9,7 +9,8 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { MouseEvent, useState } from 'react';
-import { useLazySignOutQuery } from '../../../RTKQ/api';
+import { api, useLazySignOutQuery } from '../../../RTKQ/api';
+import { useAppDispatch } from '../../../RTKQ/store';
 
 interface ProfileMenuProps {
   profileId: string;
@@ -29,10 +30,13 @@ const ProfileMenu = ({ profileId }: ProfileMenuProps) => {
 
   const handleProfileMenuItemClick = () => router.push(`/users/${profileId}`);
 
+  const dispatch = useAppDispatch();
+
   const handleSignOutMenuItemClick = async () => {
     try {
       await signOut().unwrap();
-      router.push('/sign-in');
+      await router.push('/sign-in');
+      dispatch(api.util.resetApiState());
     } catch (error) {}
   };
 
