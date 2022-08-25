@@ -91,10 +91,7 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
 
   return (
     <>
-      <Navbar.Authenticated
-        profileId={profile.id}
-        notifications={profile.notifications}
-      />
+      <Navbar.Authenticated profileId={profile.id} />
       <Container
         maxWidth='lg'
         sx={{

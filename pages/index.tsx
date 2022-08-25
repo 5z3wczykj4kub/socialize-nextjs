@@ -4,12 +4,7 @@ import connectToMongoDB from '../lib/db/connect';
 import { withSessionSsr } from '../lib/session';
 import User, { User as IUser } from '../models/User';
 
-/**
- * TODO:
- * 1. Handle authentication loading states:
- * - signing up, signing in, signing out.
- * 2. Handle general SSR loading states.
- */
+// TODO: Handle  SSR loading states
 const getServerSideProps: GetServerSideProps = withSessionSsr(
   async ({ req }) => {
     const { profileId } = req.session;
@@ -49,10 +44,7 @@ interface HomeProps {
 const Home: NextPage<HomeProps> = ({ profile }) => {
   return (
     <>
-      <Navbar.Authenticated
-        profileId={profile.id}
-        notifications={profile.notifications}
-      />
+      <Navbar.Authenticated profileId={profile.id} />
     </>
   );
 };

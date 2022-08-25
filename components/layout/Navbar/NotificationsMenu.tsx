@@ -6,21 +6,20 @@ import { Notification } from '../../../models/User';
 import NotificationsMenuItem from './NotificationsMenuItem';
 
 interface NotificationsMenuProps {
-  notifications: Notification[];
+  notifications: Notification[] | undefined;
 }
 
 /**
  * TODO:
- * 1. Add loading state if only polled notifications are used.
- * 2. Set max height.
- * 3. Show latest on top.
+ * 1. Handle marking notifications as read.
+ * 2. Add friend request action icons to menu items.
  */
 const NotificationsMenu = ({ notifications }: NotificationsMenuProps) => {
   const [notificationsButtonAnchorEl, setNotificationsButtonAnchorEl] =
     useState<HTMLElement | null>(null);
 
   const handleNotificationsMenuOpen = (event: MouseEvent<HTMLElement>) => {
-    if (notifications.length === 0) return;
+    if (!notifications || notifications.length === 0) return;
     setNotificationsButtonAnchorEl(event.currentTarget);
   };
 
@@ -32,12 +31,12 @@ const NotificationsMenu = ({ notifications }: NotificationsMenuProps) => {
   const handleNotificationsMenuItemClick = (profileId: string) =>
     router.push(`/users/${profileId}`);
 
-  const unreadNotifications = notifications.filter(({ read }) => !read);
+  const unreadNotifications = notifications?.filter(({ read }) => !read);
 
   return (
     <>
       <IconButton onClick={handleNotificationsMenuOpen}>
-        <Badge badgeContent={unreadNotifications.length} color='primary'>
+        <Badge badgeContent={unreadNotifications?.length} color='primary'>
           <Notifications />
         </Badge>
       </IconButton>
@@ -53,8 +52,13 @@ const NotificationsMenu = ({ notifications }: NotificationsMenuProps) => {
             maxWidth: 320,
           },
         }}
+        PaperProps={{
+          style: {
+            maxHeight: 83.5 * 4 + 8,
+          },
+        }}
       >
-        {notifications.map((notification, index) => (
+        {notifications?.map((notification, index) => (
           <NotificationsMenuItem
             key={`${notification.initiatorId}${notification.createdAt}${index}`}
             onClick={() =>

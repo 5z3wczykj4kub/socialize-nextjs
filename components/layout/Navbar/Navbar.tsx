@@ -17,7 +17,6 @@ import SearchBar from './SearchBar';
 
 interface AuthenticatedProps {
   profileId: string;
-  notifications: Notification[];
 }
 
 /**
@@ -27,14 +26,13 @@ interface AuthenticatedProps {
  * that will trigger the top drawer upon click.
  * 2. Consider using navbar as layout in order
  * to persist search state.
- * 3. Only use polled notifications.
  */
-const Authenticated = ({ profileId, notifications }: AuthenticatedProps) => {
+const Authenticated = ({ profileId }: AuthenticatedProps) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
-  const { data: polledNotifications } = useGetNotificationsQuery(null, {
-    pollingInterval: 10000, // TODO: Increase polling interval
+  const { data: notifications } = useGetNotificationsQuery(null, {
+    pollingInterval: 60000,
   });
 
   return (
@@ -56,9 +54,7 @@ const Authenticated = ({ profileId, notifications }: AuthenticatedProps) => {
               alignItems='center'
               spacing={2}
             >
-              <NotificationsMenu
-                notifications={polledNotifications || notifications}
-              />
+              <NotificationsMenu notifications={notifications} />
               <ProfileMenu profileId={profileId} />
             </Stack>
           </Stack>

@@ -15,6 +15,6 @@ const getUsersBySearch = async (search: string = ''): Promise<IUser[]> =>
       ).map(({ _id }) => ({ _id })),
       { path: '_id' }
     )
-  ).map(({ _id }) => ({ ..._id.format() }));
+  ).map(({ _id }: { _id: any }) => ({ ..._id.format() }));
 
 export { getUsersBySearch };

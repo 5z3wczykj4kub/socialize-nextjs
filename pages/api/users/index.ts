@@ -7,10 +7,7 @@ type RequestQuery = {
   search: string | undefined;
 };
 
-/**
- * TODO:
- * Exclude friends array from response.
- */
+// TODO: Exclude everything but id, first name and last name
 const searchApiHandler: NextApiHandler = async (req, res) => {
   if (req.method !== 'GET') return res.status(405).end();
   if (!req.session.profileId) return res.status(401).end();
