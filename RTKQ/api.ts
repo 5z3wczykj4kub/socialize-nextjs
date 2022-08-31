@@ -52,6 +52,31 @@ export const api = createApi({
     getNotifications: build.query<Notification[], null>({
       query: () => '/notifications',
     }),
+    readNotification: build.mutation<void, string>({
+      query: (notificationId) => ({
+        url: `/notifications/${notificationId}`,
+        method: 'PATCH',
+      }),
+      async onQueryStarted(notificationId, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          api.util.updateQueryData(
+            'getNotifications',
+            null,
+            (notifications) => {
+              const notification = notifications.find(
+                (notification) => notification._id === notificationId
+              )!;
+              notification.read = true;
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
@@ -64,4 +89,5 @@ export const {
   useCancelInviteOrRemoveFriendMutation,
   useRespondToFriendInviteMutation,
   useGetNotificationsQuery,
+  useReadNotificationMutation,
 } = api;

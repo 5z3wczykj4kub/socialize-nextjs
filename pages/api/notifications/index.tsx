@@ -13,14 +13,14 @@ const notificationsApiHandler: NextApiHandler = async (req, res) => {
   if (!profile) return res.status(404).json({ message: 'Profile not found' });
 
   // TODO: Improve sorted notifications array query
-  const [{ notifications } = []] = await User.aggregate([
+  const [{ notifications = [] } = {}] = await User.aggregate([
     { $match: { _id: new mongoose.mongo.ObjectId(profileId) } },
     { $unwind: '$notifications' },
     { $sort: { 'notifications.createdAt': -1 } },
     { $group: { _id: '$_id', notifications: { $push: '$notifications' } } },
   ]);
 
-  return res.json(notifications || []);
+  return res.json(notifications);
 };
 
 export default withSessionRoute(notificationsApiHandler);

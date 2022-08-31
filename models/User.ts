@@ -21,6 +21,7 @@ interface Friend {
 }
 
 interface Notification {
+  _id: string;
   message: string;
   initiatorId: string;
   createdAt?: Date | string;
