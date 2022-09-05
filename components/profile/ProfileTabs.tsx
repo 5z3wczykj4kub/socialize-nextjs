@@ -3,15 +3,15 @@ import { Paper, Tab } from '@mui/material';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { User } from '../../models/User';
 import AboutTab from './AboutTab';
-import FriendsTab from './FriendsTab';
+import FriendsTab, { FriendsTabProps } from './FriendsTab';
 import ProfileTab from './ProfileTab';
 
 interface ProfileTabsProps {
-  about: Omit<User, 'password'>;
+  profile: Omit<User, 'password'>;
   disabled?: boolean;
 }
 
-const ProfileTabs = ({ about, disabled = false }: ProfileTabsProps) => {
+const ProfileTabs = ({ profile, disabled = false }: ProfileTabsProps) => {
   const [value, setValue] = useState(disabled ? 'About' : 'Profile');
 
   const handleChange = (event: SyntheticEvent, value: string) =>
@@ -44,10 +44,10 @@ const ProfileTabs = ({ about, disabled = false }: ProfileTabsProps) => {
         <ProfileTab />
       </TabPanel>
       <TabPanel value='Friends' sx={{ mt: 1.5, p: 0 }}>
-        <FriendsTab />
+        <FriendsTab friends={profile.friends as FriendsTabProps['friends']} />
       </TabPanel>
       <TabPanel value='About' sx={{ mt: 1.5, p: 0 }}>
-        <AboutTab {...about} />
+        <AboutTab {...profile} />
       </TabPanel>
     </TabContext>
   );

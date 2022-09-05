@@ -1,5 +1,14 @@
-import { Document, Model, model, models, Schema, Types } from 'mongoose';
+import {
+  Document,
+  isValidObjectId,
+  Model,
+  model,
+  models,
+  Schema,
+  Types,
+} from 'mongoose';
 import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm';
+import friends from '../pages/api/users/[requesterId]/friends';
 
 interface User
   extends Omit<SignUpFormValues, 'confirmPassword' | 'dateOfBirth'> {
@@ -119,9 +128,35 @@ userSchema.method('format', function () {
   user.friends?.forEach((friend: any) => {
     friend.id = friend._id.toHexString();
     delete friend._id;
-    friend.requesterId = friend.requesterId.toHexString();
-    friend.receiverId = friend.receiverId.toHexString();
+    if (isValidObjectId(friend.requesterId)) {
+      friend.requesterId = friend.requesterId.toHexString();
+    } else {
+      friend.requester = {
+        ...friend.requesterId,
+        id: friend.requesterId._id.toHexString(),
+      };
+      delete friend.requesterId;
+      delete friend.requester._id;
+    }
+    if (isValidObjectId(friend.receiverId)) {
+      friend.receiverId = friend.receiverId.toHexString();
+    } else {
+      friend.receiver = {
+        ...friend.receiverId,
+        id: friend.receiverId._id.toHexString(),
+      };
+      delete friend.receiverId;
+      delete friend.receiver._id;
+    }
   });
+  user.friends = user.friends?.map((friend: any) => {
+    if (friend.requester && friend.receiver) {
+      if (friend.requester.id === user.id) return { ...friend.receiver };
+      return { ...friend.requester };
+    }
+    return friend;
+  });
+  if (user.friends === undefined) delete user.friends;
   user.notifications?.forEach((notification: any) => {
     notification.id = notification._id.toHexString();
     delete notification._id;

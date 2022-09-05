@@ -48,6 +48,26 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
             notifications: 0,
           }
         : { friends: 0, notifications: 0 }
+    )
+
+      .populate({
+        path: 'friends.requesterId',
+        select: 'firstName lastName',
+      })
+      .populate({
+        path: 'friends.receiverId',
+        select: 'firstName lastName',
+      });
+
+    /**
+     * FIXME:
+     * Very poor query.
+     * Friends filtering by status should be done
+     * at the database level.
+     * This is very suboptimal!
+     */
+    user!.friends = (user?.friends as Friend[])?.filter(
+      (friend) => friend.status === 'accepted'
     );
 
     if (!user)
@@ -122,7 +142,7 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
             />
           )}
         </ProfileHeader>
-        <ProfileBody about={user} disabled={isProfileBodyDisabled} />
+        <ProfileBody profile={user} disabled={isProfileBodyDisabled} />
       </Container>
     </>
   );
