@@ -8,6 +8,7 @@ import ProfileHeader from '../../../components/profile/ProfileHeader';
 import connectToMongoDB from '../../../lib/db/connect';
 import getFriendsStatusAction from '../../../lib/functions/getFriendsStatusAction';
 import { withSessionSsr } from '../../../lib/session';
+import Post, { Post as IPost } from '../../../models/Post';
 import User, { Friend, User as IUser } from '../../../models/User';
 
 const getServerSideProps: GetServerSideProps = withSessionSsr(
@@ -70,6 +71,15 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
       (friend) => friend.status === 'accepted'
     );
 
+    let posts: any = [];
+
+    if ((profile.friends as Friend[]).some(isFriend)) {
+      posts = await Post.find({ authorId: userId }).populate(
+        'authorId',
+        '_id firstName lastName'
+      );
+    }
+
     if (!user)
       return {
         redirect: {
@@ -83,7 +93,9 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
       props: {
         key: user.id.toString(),
         profile: profile.format(),
-        user: user.format(),
+        user: (profile.friends as Friend[]).some(isFriend)
+          ? { ...user.format(), posts: posts.map((post: any) => post.format()) }
+          : user.format(),
       },
     };
   }
@@ -91,7 +103,11 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
 
 interface ProfileProps {
   profile: Omit<IUser, 'password'>;
-  user: Omit<IUser, 'password'>;
+  user: Omit<IUser, 'password'> & {
+    posts?: Omit<IPost, 'authorId'>[] & {
+      author: Pick<IUser, 'id' | 'firstName' | 'lastName'>;
+    };
+  };
 }
 
 const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
