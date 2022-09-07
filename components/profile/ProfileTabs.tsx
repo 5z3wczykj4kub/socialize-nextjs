@@ -41,7 +41,7 @@ const ProfileTabs = ({ profile, disabled = false }: ProfileTabsProps) => {
         </TabList>
       </Paper>
       <TabPanel value='Profile' sx={{ mt: 1.5, p: 0 }}>
-        <ProfileTab {...profile} />
+        <ProfileTab {...profile} setTabValue={setValue} />
       </TabPanel>
       <TabPanel value='Friends' sx={{ mt: 1.5, p: 0 }}>
         <FriendsTab friends={profile.friends as FriendsTabProps['friends']} />
