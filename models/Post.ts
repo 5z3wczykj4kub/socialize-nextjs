@@ -15,6 +15,7 @@ interface Post {
   createdAt: Date | string;
   likes: string[];
   comments: string[];
+  imageUrl?: string;
 }
 
 type PostModelInstance = Document<unknown, any, Post> &

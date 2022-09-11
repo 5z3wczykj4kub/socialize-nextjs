@@ -15,7 +15,7 @@ interface FriendsTabProps {
   friends: Pick<User, 'id' | 'firstName' | 'lastName'>[];
 }
 
-const FriendsTab = ({ friends }: FriendsTabProps) => {
+const FriendsTab = ({ friends = [] }: FriendsTabProps) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -32,13 +32,7 @@ const FriendsTab = ({ friends }: FriendsTabProps) => {
                   columnGap={2}
                   sx={{ overflowX: 'hidden' }}
                 >
-                  <Avatar
-                    variant={matches ? 'rounded' : 'circular'}
-                    sx={{
-                      width: { xs: 40, sm: 60 },
-                      height: { xs: 40, sm: 60 },
-                    }}
-                  />
+                  <Avatar variant={matches ? 'rounded' : 'circular'} />
                   <Typography noWrap>
                     {firstName} {lastName}
                   </Typography>

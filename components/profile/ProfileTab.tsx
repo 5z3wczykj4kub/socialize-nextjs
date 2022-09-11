@@ -10,25 +10,23 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
-import { Post } from '../../models/Post';
+import { Post as IPost } from '../../models/Post';
 import { User } from '../../models/User';
+import Post from '../posts/Post';
 import AboutTab from './AboutTab';
 
-const ProfileTab = (
-  props: Omit<User, 'password'> & {
-    posts?: Omit<Post, 'authorId'>[] & {
-      author: Pick<User, 'id' | 'firstName' | 'lastName'>;
-    };
-    setTabValue: Dispatch<SetStateAction<string>>;
-  }
-) => {
-  const { friends, posts, setTabValue } = props;
+type ProfileTabProps = Omit<User, 'password'> & {
+  posts?: (Omit<IPost, 'authorId'> & {
+    author: Pick<User, 'id' | 'firstName' | 'lastName'>;
+  })[];
+  setTabValue: Dispatch<SetStateAction<string>>;
+};
+
+const ProfileTab = (props: ProfileTabProps) => {
+  const { friends = [], posts, setTabValue } = props;
 
   const handleSeeAllLinkClick = () => setTabValue('Friends');
-  /**
-   * TODO:
-   * Create post component.
-   */
+
   return (
     <Grid container columnSpacing={1.5}>
       <Grid
@@ -66,10 +64,10 @@ const ProfileTab = (
                   See all
                 </MuiLink>
               </Stack>
-              <Divider />
+              {friends.length > 0 && <Divider />}
               <Grid container>
                 {(friends as Pick<User, 'id' | 'firstName' | 'lastName'>[])
-                  .slice(0, 9)
+                  .slice(0, 6)
                   .map(({ id, firstName, lastName }) => (
                     <Grid item xs={6} key={id}>
                       <Link href={`/users/${id}`}>
@@ -80,13 +78,7 @@ const ProfileTab = (
                             columnGap={2}
                             sx={{ overflowX: 'hidden' }}
                           >
-                            <Avatar
-                              variant='rounded'
-                              sx={{
-                                width: 60,
-                                height: 60,
-                              }}
-                            />
+                            <Avatar variant='rounded' />
                             <Typography noWrap>
                               {firstName} {lastName}
                             </Typography>
@@ -101,9 +93,13 @@ const ProfileTab = (
         </Grid>
       </Grid>
       <Grid item xs={12} md={8}>
-        <Paper elevation={4} sx={{ width: '100%', p: 2.5 }}>
-          {JSON.stringify(posts, null, 2)}
-        </Paper>
+        <Grid container rowSpacing={1.5}>
+          {posts?.map((post) => (
+            <Grid item xs={12} key={post.id}>
+              <Post {...post} />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     </Grid>
   );

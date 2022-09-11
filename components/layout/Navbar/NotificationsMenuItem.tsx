@@ -1,5 +1,5 @@
 import { Avatar, MenuItem, Stack, Typography } from '@mui/material';
-import { formatDistance } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { MouseEventHandler } from 'react';
 import { Notification } from '../../../models/User';
 
@@ -35,9 +35,7 @@ const NotificationsMenuItem = ({
           </Typography>
         </Stack>
         <Typography fontSize='small' color='gray' ml='auto'>
-          {formatDistance(new Date(createdAt!), new Date(), {
-            addSuffix: true,
-          })}
+          {formatDistanceToNow(new Date(createdAt!), { addSuffix: true })}
         </Typography>
       </Stack>
     </MenuItem>
