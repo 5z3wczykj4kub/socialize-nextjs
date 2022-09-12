@@ -32,7 +32,10 @@ const FriendsTab = ({ friends = [] }: FriendsTabProps) => {
                   columnGap={2}
                   sx={{ overflowX: 'hidden' }}
                 >
-                  <Avatar variant={matches ? 'rounded' : 'circular'} />
+                  <Avatar variant={matches ? 'rounded' : 'circular'}>
+                    {firstName[0]}
+                    {lastName[0]}
+                  </Avatar>
                   <Typography noWrap>
                     {firstName} {lastName}
                   </Typography>

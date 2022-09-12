@@ -13,6 +13,9 @@ const NotificationsMenuItem = ({
   read,
   onClick,
 }: NotificationsMenuItemProps) => {
+  const fullName = message.split(' ').slice(0, 2).join(' ');
+  const [firstName, lastName] = fullName.split(' ');
+
   return (
     <MenuItem
       disabled={read}
@@ -23,15 +26,23 @@ const NotificationsMenuItem = ({
     >
       <Stack rowGap={0.5}>
         <Stack direction='row' alignItems='center' columnGap={2}>
-          <Avatar sx={{ width: 28, height: 28 }} />
+          <Avatar
+            sx={{
+              width: 28,
+              height: 28,
+              fontSize: 'small',
+            }}
+          >
+            {firstName[0]}
+            {lastName[0]}
+          </Avatar>
           <Typography
             sx={{
               whiteSpace: 'normal',
               overflowWrap: 'anywhere',
             }}
           >
-            <b>{message.split(' ').slice(0, 2).join(' ')}</b>{' '}
-            {message.split(' ').slice(2).join(' ')}
+            <b>{fullName}</b> {message.split(' ').slice(2).join(' ')}
           </Typography>
         </Stack>
         <Typography fontSize='small' color='gray' ml='auto'>

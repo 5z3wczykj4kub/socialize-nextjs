@@ -2,16 +2,24 @@ import { Avatar, Box, Paper, useMediaQuery, useTheme } from '@mui/material';
 import { ReactNode } from 'react';
 
 interface ProfileHeaderProps {
+  profileInitials: string;
   children: ReactNode;
 }
 
-const ProfileHeader = ({ children }: ProfileHeaderProps) => {
+const ProfileHeader = ({ profileInitials, children }: ProfileHeaderProps) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
     <Paper elevation={4} sx={{ p: 2.5 }}>
-      <Paper sx={{ position: 'relative', height: matches ? 300 : 150, p: 2.5 }}>
+      <Paper
+        sx={{
+          position: 'relative',
+          height: matches ? 300 : 150,
+          p: 2.5,
+          boxShadow: 'none',
+        }}
+      >
         <Avatar
           sx={{
             position: 'absolute',
@@ -21,8 +29,11 @@ const ProfileHeader = ({ children }: ProfileHeaderProps) => {
             width: matches ? 150 : 100,
             height: matches ? 150 : 100,
             ml: matches ? 9.375 : 0,
+            fontSize: 50,
           }}
-        />
+        >
+          {profileInitials}
+        </Avatar>
       </Paper>
       <Box
         sx={{

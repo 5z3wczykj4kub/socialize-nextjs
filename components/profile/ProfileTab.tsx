@@ -23,7 +23,7 @@ type ProfileTabProps = Omit<User, 'password'> & {
 };
 
 const ProfileTab = (props: ProfileTabProps) => {
-  const { friends = [], posts, setTabValue } = props;
+  const { firstName, lastName, friends = [], posts, setTabValue } = props;
 
   const handleSeeAllLinkClick = () => setTabValue('Friends');
 
@@ -78,7 +78,10 @@ const ProfileTab = (props: ProfileTabProps) => {
                             columnGap={2}
                             sx={{ overflowX: 'hidden' }}
                           >
-                            <Avatar variant='rounded' />
+                            <Avatar variant='rounded'>
+                              {firstName[0]}
+                              {lastName[0]}
+                            </Avatar>
                             <Typography noWrap>
                               {firstName} {lastName}
                             </Typography>
@@ -96,7 +99,10 @@ const ProfileTab = (props: ProfileTabProps) => {
         <Grid container rowSpacing={1.5}>
           {posts?.map((post) => (
             <Grid item xs={12} key={post.id}>
-              <Post {...post} />
+              <Post
+                profileInitials={`${firstName[0]}${lastName[0]}`}
+                {...post}
+              />
             </Grid>
           ))}
         </Grid>

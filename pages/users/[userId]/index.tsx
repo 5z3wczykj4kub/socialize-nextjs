@@ -74,10 +74,9 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
     let posts: any = [];
 
     if ((profile.friends as Friend[]).some(isFriend)) {
-      posts = await Post.find({ authorId: userId }).populate(
-        'authorId',
-        '_id firstName lastName'
-      );
+      posts = await Post.find({ authorId: userId })
+        .populate('authorId', '_id firstName lastName')
+        .populate('comments.authorId', '_id firstName lastName');
     }
 
     if (!user)
@@ -127,7 +126,7 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
 
   return (
     <>
-      <Navbar.Authenticated profileId={profile.id} />
+      <Navbar.Authenticated {...profile} />
       <Container
         maxWidth='lg'
         sx={{
@@ -136,7 +135,9 @@ const Profile: NextPage<ProfileProps> = ({ profile, user }) => {
           py: { xs: 2, sm: 3 },
         }}
       >
-        <ProfileHeader>
+        <ProfileHeader
+          profileInitials={`${user.firstName[0]}${user.lastName[0]}`}
+        >
           <Typography
             variant='h5'
             align={matches ? 'left' : 'center'}

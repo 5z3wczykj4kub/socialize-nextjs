@@ -64,7 +64,10 @@ const SearchBar = () => {
       filterOptions={(option) => option}
       renderOption={(props, option) => (
         <MenuItem {...props} sx={{ columnGap: 2 }}>
-          <Avatar sx={{ width: 28, height: 28 }} />
+          <Avatar sx={{ width: 28, height: 28, fontSize: 'small' }}>
+            {option.label.split(' ')[0][0]}
+            {option.label.split(' ')[1][0]}
+          </Avatar>
           {option.label}
         </MenuItem>
       )}

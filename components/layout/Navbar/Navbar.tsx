@@ -8,16 +8,12 @@ import {
   useTheme,
 } from '@mui/material';
 import Link from 'next/link';
-import { Notification } from '../../../models/User';
+import { Notification, User } from '../../../models/User';
 import { useGetNotificationsQuery } from '../../../RTKQ/api';
 import Logo from './Logo';
 import NotificationsMenu from './NotificationsMenu';
 import ProfileMenu from './ProfileMenu';
 import SearchBar from './SearchBar';
-
-interface AuthenticatedProps {
-  profileId: string;
-}
 
 /**
  * TODO:
@@ -27,7 +23,7 @@ interface AuthenticatedProps {
  * 2. Consider using navbar as layout in order
  * to persist search state.
  */
-const Authenticated = ({ profileId }: AuthenticatedProps) => {
+const Authenticated = (profile: Omit<User, 'password'>) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -55,7 +51,7 @@ const Authenticated = ({ profileId }: AuthenticatedProps) => {
               spacing={2}
             >
               <NotificationsMenu notifications={notifications} />
-              <ProfileMenu profileId={profileId} />
+              <ProfileMenu {...profile} />
             </Stack>
           </Stack>
         </Toolbar>

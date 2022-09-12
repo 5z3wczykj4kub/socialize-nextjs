@@ -9,14 +9,11 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { MouseEvent, useState } from 'react';
+import { User } from '../../../models/User';
 import { api, useLazySignOutQuery } from '../../../RTKQ/api';
 import { useAppDispatch } from '../../../RTKQ/store';
 
-interface ProfileMenuProps {
-  profileId: string;
-}
-
-const ProfileMenu = ({ profileId }: ProfileMenuProps) => {
+const ProfileMenu = (profile: Omit<User, 'password'>) => {
   const [avatarElement, setAvatarElement] = useState<HTMLElement | null>(null);
 
   const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) =>
@@ -28,7 +25,7 @@ const ProfileMenu = ({ profileId }: ProfileMenuProps) => {
 
   const [signOut] = useLazySignOutQuery();
 
-  const handleProfileMenuItemClick = () => router.push(`/users/${profileId}`);
+  const handleProfileMenuItemClick = () => router.push(`/users/${profile.id}`);
 
   const dispatch = useAppDispatch();
 
@@ -43,7 +40,10 @@ const ProfileMenu = ({ profileId }: ProfileMenuProps) => {
   return (
     <>
       <IconButton onClick={handleProfileMenuOpen} sx={{ p: 0 }}>
-        <Avatar />
+        <Avatar>
+          {profile.firstName[0]}
+          {profile.lastName[0]}
+        </Avatar>
       </IconButton>
       <Menu
         open={!!avatarElement}
