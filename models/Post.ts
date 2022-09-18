@@ -90,22 +90,20 @@ postSchema.method('format', function () {
     delete post.author._id;
   }
   post.comments.forEach((comment: any) => {
-    if (isValidObjectId(comment.authorId)) {
-      comment.authorId = comment.authorId.toHexString();
-    } else {
-      comment.author = comment.authorId;
+    comment.id = comment._id.toHexString();
+    delete comment._id;
+    if (comment.authorId._id) {
+      comment.author = { ...comment.authorId };
+      comment.author.id = comment.authorId._id.toHexString();
       delete comment.authorId;
-      comment.id = comment._id.toHexString();
-      delete comment._id;
-      comment.author._id = comment.author._id.toHexString();
       delete comment.author._id;
-      comment.createdAt = comment.createdAt.toISOString();
     }
+    comment.createdAt = comment.createdAt.toISOString();
   });
   return post;
 });
 
-export type { Post };
+export type { Post, Comment };
 
 export default (models.Post as Model<PostModelInstance>) ||
   model<Post>('Post', postSchema);

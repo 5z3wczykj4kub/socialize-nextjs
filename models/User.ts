@@ -8,7 +8,6 @@ import {
   Types,
 } from 'mongoose';
 import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm';
-import friends from '../pages/api/users/[requesterId]/friends';
 
 interface User
   extends Omit<SignUpFormValues, 'confirmPassword' | 'dateOfBirth'> {

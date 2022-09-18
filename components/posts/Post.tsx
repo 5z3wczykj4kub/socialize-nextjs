@@ -1,6 +1,6 @@
-import SendIcon from '@mui/icons-material/Send';
 import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import SendIcon from '@mui/icons-material/Send';
 import {
   Avatar,
   Badge,
@@ -18,17 +18,18 @@ import {
   Link as MuiLink,
   Paper,
   Stack,
-  Tooltip,
   Typography,
 } from '@mui/material';
+import { nanoid } from '@reduxjs/toolkit';
 import { formatDistanceToNow } from 'date-fns';
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { TextField } from 'formik-mui';
 import Link from 'next/link';
 import { useState } from 'react';
+import { object, string } from 'yup';
 import { Post as IPost } from '../../models/Post';
 import { User } from '../../models/User';
-import { object, string } from 'yup';
+import { useAddCommentMutation } from '../../RTKQ/api';
 
 type PostProps = Omit<IPost, 'authorId'> & {
   author: Pick<User, 'id' | 'firstName' | 'lastName'>;
@@ -37,21 +38,47 @@ type PostProps = Omit<IPost, 'authorId'> & {
 };
 
 const Post = ({
+  id,
   author,
   createdAt,
   imageUrl,
   content,
   likes,
-  comments,
   action,
   profileInitials,
+  ...props
 }: PostProps) => {
+  const [comments, setComments] = useState<any>(props.comments);
+
   const [areCommentsExpanded, setAreCommentsExpanded] = useState(false);
 
   const handleCommentIconClick = () =>
     setAreCommentsExpanded(!areCommentsExpanded);
 
-  const handleAddComment = () => {};
+  const [addComment, { isLoading: isAddingComment }] = useAddCommentMutation();
+
+  const handleAddComment = async (
+    { comment }: { comment: string },
+    {
+      resetForm,
+    }: FormikHelpers<{
+      comment: string;
+    }>
+  ) => {
+    const commentId = nanoid();
+    setComments((previousComments: any) => [
+      { id: commentId, author, content: comment, createdAt: new Date() },
+      ...previousComments,
+    ]);
+    try {
+      await addComment({ postId: id, content: comment }).unwrap();
+      resetForm();
+    } catch (error) {
+      setComments((previousComments: any) =>
+        previousComments.filter((comment: any) => comment.id !== commentId)
+      );
+    }
+  };
 
   return (
     <Card elevation={4}>
@@ -158,9 +185,10 @@ const Post = ({
                         endAdornment: (
                           <InputAdornment position='end'>
                             <IconButton
+                              edge='end'
+                              disabled={isAddingComment}
                               onClick={submitForm}
                               onMouseDown={(event) => event.preventDefault()}
-                              edge='end'
                             >
                               <SendIcon />
                             </IconButton>
@@ -180,8 +208,9 @@ const Post = ({
                 </Typography>
               </Typography>
             )}
-            {comments.map((comment) => (
+            {comments.map((comment: any) => (
               <Stack
+                key={comment.id}
                 component={Paper}
                 rowGap={2}
                 elevation={16}
@@ -191,8 +220,8 @@ const Post = ({
                   <Link href={`/users/${author.id}`}>
                     <MuiLink href={`/users/${author.id}`} underline='none'>
                       <Avatar>
-                        {(comment as any).author.firstName[0]}
-                        {(comment as any).author.lastName[0]}
+                        {comment.author.firstName[0]}
+                        {comment.author.lastName[0]}
                       </Avatar>
                     </MuiLink>
                   </Link>

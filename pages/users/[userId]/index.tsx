@@ -50,7 +50,6 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
           }
         : { friends: 0, notifications: 0 }
     )
-
       .populate({
         path: 'friends.requesterId',
         select: 'firstName lastName',
@@ -73,6 +72,10 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
 
     let posts: any = [];
 
+    /**
+     * TODO:
+     * Sort comments by `createdAt`.
+     */
     if ((profile.friends as Friend[]).some(isFriend)) {
       posts = await Post.find({ authorId: userId })
         .populate('authorId', '_id firstName lastName')
