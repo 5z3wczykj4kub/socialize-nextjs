@@ -31,6 +31,8 @@ import { Post as IPost } from '../../models/Post';
 import { User } from '../../models/User';
 import { useAddCommentMutation } from '../../RTKQ/api';
 
+const COMMENTS_LIMIT = 2;
+
 type PostProps = Omit<IPost, 'authorId'> & {
   author: Pick<User, 'id' | 'firstName' | 'lastName'>;
   action?: CardHeaderProps['action'];
@@ -49,11 +51,23 @@ const Post = ({
   ...props
 }: PostProps) => {
   const [comments, setComments] = useState<any>(props.comments);
+  const [commentsOffset, setCommentsOffset] = useState(COMMENTS_LIMIT);
 
   const [areCommentsExpanded, setAreCommentsExpanded] = useState(false);
 
-  const handleCommentIconClick = () =>
+  const handleCommentIconClick = () => {
     setAreCommentsExpanded(!areCommentsExpanded);
+    if (!areCommentsExpanded) setCommentsOffset(COMMENTS_LIMIT);
+  };
+
+  const isShowMoreCommentsLinkVisible =
+    comments.slice(commentsOffset, commentsOffset + COMMENTS_LIMIT).length !==
+    0;
+
+  const handleShowMoreCommentsLinkClick = () =>
+    setCommentsOffset(
+      (previousCommentsOffset) => previousCommentsOffset + COMMENTS_LIMIT
+    );
 
   const [addComment, { isLoading: isAddingComment }] = useAddCommentMutation();
 
@@ -208,7 +222,7 @@ const Post = ({
                 </Typography>
               </Typography>
             )}
-            {comments.map((comment: any) => (
+            {comments.slice(0, commentsOffset).map((comment: any) => (
               <Stack
                 key={comment.id}
                 component={Paper}
@@ -253,6 +267,23 @@ const Post = ({
                 </Typography>
               </Stack>
             ))}
+            {isShowMoreCommentsLinkVisible && (
+              <Box sx={{ mx: 'auto' }}>
+                <Typography
+                  component='span'
+                  color='primary'
+                  onClick={handleShowMoreCommentsLinkClick}
+                  sx={{
+                    cursor: 'pointer',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                    },
+                  }}
+                >
+                  Show more
+                </Typography>
+              </Box>
+            )}
           </Stack>
         </CardContent>
       </Collapse>

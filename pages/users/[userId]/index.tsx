@@ -96,7 +96,24 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
         key: user.id.toString(),
         profile: profile.format(),
         user: (profile.friends as Friend[]).some(isFriend)
-          ? { ...user.format(), posts: posts.map((post: any) => post.format()) }
+          ? {
+              ...user.format(),
+              posts: posts
+                .map((post: any) => post.format())
+                .map((post: any) => ({
+                  ...post,
+                  /**
+                   * NOTE:
+                   * Again, such sorting is complete crap.
+                   * Optimistic update when adding a comment also makes no sene.
+                   */
+                  comments: post.comments
+                    .slice()
+                    .sort(
+                      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                    ),
+                })),
+            }
           : user.format(),
       },
     };
