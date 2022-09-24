@@ -100,6 +100,8 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
               ...user.format(),
               posts: posts
                 .map((post: any) => post.format())
+                .slice()
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 .map((post: any) => ({
                   ...post,
                   /**

@@ -19,7 +19,12 @@ const commentsApiHandler: NextApiHandler = async (req, res) => {
   const post = await Post.findById(postId);
   if (!post) return res.status(402).json({ message: 'Post not found' });
 
-  if (post.authorId.toString() !== profileId) return res.status(403).end();
+  /**
+   * TODO:
+   * Missing guard clause.
+   * Should be checking if the commentator
+   * is a friend of the post's author.
+   */
 
   if (req.method === 'POST') {
     const { content } = req.body as { content: string };

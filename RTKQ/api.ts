@@ -77,6 +77,13 @@ export const api = createApi({
         }
       },
     }),
+    addPost: build.mutation<void, { requesterId: string; content: string }>({
+      query: ({ requesterId, content }) => ({
+        url: `users/${requesterId}/posts`,
+        method: 'POST',
+        body: { content },
+      }),
+    }),
     addComment: build.mutation<void, { postId: string; content: string }>({
       query: ({ postId, content }) => ({
         url: `/posts/${postId}/comments`,
@@ -97,5 +104,6 @@ export const {
   useRespondToFriendInviteMutation,
   useGetNotificationsQuery,
   useReadNotificationMutation,
+  useAddPostMutation,
   useAddCommentMutation,
 } = api;
