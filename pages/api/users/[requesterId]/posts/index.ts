@@ -30,13 +30,16 @@ const postsApiHandler: NextApiHandler = async (req, res) => {
       if (!requester)
         return res.status(404).json({ message: 'Requester not found' });
 
-      const post = new Post({
+      const post = await Post.create({
         authorId: requesterId,
         content,
       });
 
-      await post.save();
-      return res.status(201).end();
+      return res
+        .status(201)
+        .json(
+          (await post.populate('authorId', '_id firstName lastName')).format()
+        );
     } catch (error) {
       const { message, errors } = error as ValidationError;
       return res.status(422).json({ message, errors });
