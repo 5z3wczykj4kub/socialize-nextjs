@@ -125,8 +125,9 @@ const Post = ({
     }
   };
 
-  const handleLikeToggle = () =>
-    likes.includes(profileId) ? handleUnlike() : handleLike();
+  const handleLikeToggle = likes.includes(profileId)
+    ? handleUnlike
+    : handleLike;
 
   return (
     <Card elevation={4}>
