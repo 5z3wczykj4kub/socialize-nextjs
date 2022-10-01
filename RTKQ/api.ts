@@ -91,6 +91,18 @@ export const api = createApi({
         body: { content },
       }),
     }),
+    like: build.mutation<void, { postId: string }>({
+      query: ({ postId }) => ({
+        url: `/posts/${postId}/likes`,
+        method: 'POST',
+      }),
+    }),
+    unlike: build.mutation<void, { postId: string }>({
+      query: ({ postId }) => ({
+        url: `/posts/${postId}/likes`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -106,4 +118,6 @@ export const {
   useReadNotificationMutation,
   useAddPostMutation,
   useAddCommentMutation,
+  useLikeMutation,
+  useUnlikeMutation,
 } = api;

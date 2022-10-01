@@ -23,7 +23,7 @@ type ProfileTabProps = Omit<User, 'password'> & {
 };
 
 const ProfileTab = (props: ProfileTabProps) => {
-  const { firstName, lastName, friends = [], posts, setTabValue } = props;
+  const { id, firstName, lastName, friends = [], posts, setTabValue } = props;
 
   const handleSeeAllLinkClick = () => setTabValue('Friends');
 
@@ -100,6 +100,7 @@ const ProfileTab = (props: ProfileTabProps) => {
           {posts?.map((post) => (
             <Grid item xs={12} key={post.id}>
               <Post
+                profileId={id}
                 profileInitials={`${firstName[0]}${lastName[0]}`}
                 {...post}
               />

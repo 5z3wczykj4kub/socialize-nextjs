@@ -1,3 +1,5 @@
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import CommentIcon from '@mui/icons-material/Comment';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import SendIcon from '@mui/icons-material/Send';
@@ -29,13 +31,18 @@ import { useState } from 'react';
 import { object, string } from 'yup';
 import { Post as IPost } from '../../models/Post';
 import { User } from '../../models/User';
-import { useAddCommentMutation } from '../../RTKQ/api';
+import {
+  useAddCommentMutation,
+  useLikeMutation,
+  useUnlikeMutation,
+} from '../../RTKQ/api';
 
 const COMMENTS_LIMIT = 2;
 
 type PostProps = Omit<IPost, 'authorId'> & {
   author: Pick<User, 'id' | 'firstName' | 'lastName'>;
   action?: CardHeaderProps['action'];
+  profileId: string;
   profileInitials: string;
 };
 
@@ -45,13 +52,15 @@ const Post = ({
   createdAt,
   imageUrl,
   content,
-  likes,
   action,
+  profileId,
   profileInitials,
   ...props
 }: PostProps) => {
   const [comments, setComments] = useState<any>(props.comments);
   const [commentsOffset, setCommentsOffset] = useState(COMMENTS_LIMIT);
+
+  const [likes, setLikes] = useState(props.likes);
 
   const [areCommentsExpanded, setAreCommentsExpanded] = useState(false);
 
@@ -93,6 +102,31 @@ const Post = ({
       );
     }
   };
+
+  const [like] = useLikeMutation();
+
+  const handleLike = async () => {
+    setLikes((likes) => [profileId, ...likes]);
+    try {
+      await like({ postId: id }).unwrap();
+    } catch (error) {
+      setLikes((likes) => likes.filter((like) => like !== profileId));
+    }
+  };
+
+  const [unlike] = useUnlikeMutation();
+
+  const handleUnlike = async () => {
+    setLikes((likes) => likes.filter((like) => like !== profileId));
+    try {
+      await unlike({ postId: id }).unwrap();
+    } catch (error) {
+      setLikes((likes) => [profileId, ...likes]);
+    }
+  };
+
+  const handleLikeToggle = () =>
+    likes.includes(profileId) ? handleUnlike() : handleLike();
 
   return (
     <Card elevation={4}>
@@ -137,7 +171,7 @@ const Post = ({
         <Typography>{content}</Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton>
+        <IconButton onClick={handleLikeToggle}>
           <Badge
             badgeContent={likes.length}
             color='primary'
@@ -146,7 +180,11 @@ const Post = ({
               horizontal: 'right',
             }}
           >
-            <FavoriteIcon />
+            {likes.includes(profileId) ? (
+              <ThumbUpAltIcon />
+            ) : (
+              <ThumbUpOffAltIcon />
+            )}
           </Badge>
         </IconButton>
         <IconButton sx={{ ml: 'auto' }} onClick={handleCommentIconClick}>

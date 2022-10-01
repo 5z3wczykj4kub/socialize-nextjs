@@ -40,7 +40,9 @@ const getServerSideProps: GetServerSideProps = withSessionSsr(
             $in: (profile.friends as Friend[])
               .filter(({ status }) => status === 'accepted')
               .map(({ requesterId, receiverId }) =>
-                requesterId === profile.id ? receiverId : requesterId
+                requesterId.toString() === profile.id.toString()
+                  ? receiverId
+                  : requesterId
               ),
           },
         },

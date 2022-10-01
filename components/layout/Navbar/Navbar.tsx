@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import Link from 'next/link';
-import { Notification, User } from '../../../models/User';
+import { User } from '../../../models/User';
 import { useGetNotificationsQuery } from '../../../RTKQ/api';
 import Logo from './Logo';
 import NotificationsMenu from './NotificationsMenu';
@@ -28,7 +28,7 @@ const Authenticated = (profile: Omit<User, 'password'>) => {
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   const { data: notifications } = useGetNotificationsQuery(null, {
-    pollingInterval: 60000,
+    pollingInterval: 10000,
   });
 
   return (

@@ -4,7 +4,7 @@ import connectToMongoDB from '../../../../../lib/db/connect';
 import { withSessionRoute } from '../../../../../lib/session';
 import Post from '../../../../../models/Post';
 
-const commentsApiHandler: NextApiHandler = async (req, res) => {
+const likesApiHandler: NextApiHandler = async (req, res) => {
   const { profileId } = req.session;
   if (!profileId) return res.status(401).end();
 
@@ -22,24 +22,31 @@ const commentsApiHandler: NextApiHandler = async (req, res) => {
   /**
    * TODO:
    * Missing guard clause.
-   * Should be checking if the commentator
+   * Should be checking if the person liking post
    * is a friend of the post's author.
    */
 
-  if (req.method === 'POST') {
-    const { content } = req.body as { content: string };
-
-    try {
-      post.comments.push({ authorId: profileId, content });
+  try {
+    if (req.method === 'POST') {
+      if (post.likes.includes(profileId))
+        return res.status(422).json({ message: 'Post already liked' });
+      post.likes.push(profileId);
       await post.save();
       return res.status(201).end();
-    } catch (error) {
-      const { message, errors } = error as ValidationError;
-      return res.status(422).json({ message, errors });
     }
+    if (req.method === 'DELETE') {
+      if (!post.likes.includes(profileId))
+        return res.status(422).json({ message: 'Post not liked' });
+      post.likes = post.likes.filter((like) => like.toString() !== profileId);
+      await post.save();
+      return res.status(201).end();
+    }
+  } catch (error) {
+    const { message, errors } = error as ValidationError;
+    return res.status(422).json({ message, errors });
   }
 
   return res.status(405).end();
 };
 
-export default withSessionRoute(commentsApiHandler);
+export default withSessionRoute(likesApiHandler);

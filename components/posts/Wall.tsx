@@ -145,6 +145,7 @@ const Wall = ({ profile, posts: initialPosts }: WallProps) => {
         {posts.map((post) => (
           <Post
             key={post.id}
+            profileId={profile.id}
             profileInitials={`${post.author.firstName[0]}${post.author.lastName[0]}`}
             {...post}
           />

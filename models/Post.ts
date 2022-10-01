@@ -100,6 +100,7 @@ postSchema.method('format', function () {
     }
     comment.createdAt = comment.createdAt.toISOString();
   });
+  post.likes = post.likes.map((like: any) => like.toHexString());
   return post;
 });
 
