@@ -1,7 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { SignInFormValues } from '../components/forms/SignInForm/SignInForm';
-import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm';
-import { Friend, Notification, User } from '../models/User';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { SignInFormValues } from '../components/forms/SignInForm/SignInForm'
+import { SignUpFormValues } from '../components/forms/SignUpForm/SignUpForm'
+import { Friend, Notification, User } from '../models/User'
 
 export const api = createApi({
   reducerPath: 'api',
@@ -65,23 +65,23 @@ export const api = createApi({
             (notifications) => {
               const notification = notifications.find(
                 (notification) => notification._id === notificationId
-              )!;
-              notification.read = true;
+              )!
+              notification.read = true
             }
           )
-        );
+        )
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
-          patchResult.undo();
+          patchResult.undo()
         }
       },
     }),
-    addPost: build.mutation<void, { requesterId: string; content: string }>({
-      query: ({ requesterId, content }) => ({
+    addPost: build.mutation<void, { requesterId: string; post: FormData }>({
+      query: ({ requesterId, post }) => ({
         url: `users/${requesterId}/posts`,
         method: 'POST',
-        body: { content },
+        body: post,
       }),
     }),
     addComment: build.mutation<void, { postId: string; content: string }>({
@@ -104,7 +104,7 @@ export const api = createApi({
       }),
     }),
   }),
-});
+})
 
 export const {
   useSignUpMutation,
@@ -120,4 +120,4 @@ export const {
   useAddCommentMutation,
   useLikeMutation,
   useUnlikeMutation,
-} = api;
+} = api

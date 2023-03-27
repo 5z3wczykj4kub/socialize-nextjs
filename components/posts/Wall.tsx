@@ -1,4 +1,5 @@
-import { LoadingButton } from '@mui/lab';
+import PhotoCamera from '@mui/icons-material/PhotoCamera'
+import { LoadingButton } from '@mui/lab'
 import {
   Box,
   Button,
@@ -11,37 +12,39 @@ import {
   Paper,
   Stack,
   Typography,
-} from '@mui/material';
-import { Field, Form, Formik } from 'formik';
-import { TextField } from 'formik-mui';
-import { useState } from 'react';
-import { object, string } from 'yup';
-import { Post as IPost } from '../../models/Post';
-import { User as IUser } from '../../models/User';
-import { useAddPostMutation } from '../../RTKQ/api';
-import Post from './Post';
+} from '@mui/material'
+import { Field, Form, Formik } from 'formik'
+import { SimpleFileUpload, TextField } from 'formik-mui'
+import { useRef, useState } from 'react'
+import { object, string } from 'yup'
+import { Post as IPost } from '../../models/Post'
+import { User as IUser } from '../../models/User'
+import { useAddPostMutation } from '../../RTKQ/api'
+import Post from './Post'
 
 interface WallProps {
-  profile: IUser;
+  profile: IUser
   posts: Omit<IPost, 'authorId'>[] & {
-    author: Pick<IUser, 'id' | 'firstName' | 'lastName'>;
-  };
+    author: Pick<IUser, 'id' | 'firstName' | 'lastName'>
+  }
 }
 
 const Wall = ({ profile, posts: initialPosts }: WallProps) => {
-  const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = useState(initialPosts)
 
-  const [isAddPostDialogOpen, setIsAddPostDialogOpen] = useState(false);
+  const [isAddPostDialogOpen, setIsAddPostDialogOpen] = useState(false)
 
-  const handleAddPostButtonClick = () => setIsAddPostDialogOpen(true);
+  const handleAddPostButtonClick = () => setIsAddPostDialogOpen(true)
 
   const handleAddPostDialogCancelButtonClick = () => {
-    setIsAddPostDialogOpen(false);
-  };
+    setIsAddPostDialogOpen(false)
+  }
 
-  const [addPost, { isLoading: isAddingPost }] = useAddPostMutation();
+  const [addPost, { isLoading: isAddingPost }] = useAddPostMutation()
 
-  const fullName = `${profile.firstName} ${profile.lastName}`;
+  const fullName = `${profile.firstName} ${profile.lastName}`
+
+  const inputRef = useRef<HTMLInputElement>()
 
   return (
     <>
@@ -77,20 +80,23 @@ const Wall = ({ profile, posts: initialPosts }: WallProps) => {
         fullWidth
       >
         <Formik
-          initialValues={{ content: '' }}
+          initialValues={{ content: '', image: undefined as undefined | File }}
           validationSchema={object().shape({
             content: string().required(
               'Content must be at least 1 character long'
             ),
           })}
-          onSubmit={async ({ content }) => {
+          onSubmit={async ({ content, image }) => {
+            const formData = new FormData()
+            formData.append('content', content)
+            if (image) formData.append('image', image)
             try {
               const post = await addPost({
                 requesterId: profile.id,
-                content,
-              }).unwrap();
-              setPosts((posts) => [post, ...posts]);
-              handleAddPostDialogCancelButtonClick();
+                post: formData,
+              }).unwrap()
+              setPosts((posts) => [post, ...posts])
+              handleAddPostDialogCancelButtonClick()
             } catch (error) {}
           }}
         >
@@ -100,7 +106,7 @@ const Wall = ({ profile, posts: initialPosts }: WallProps) => {
                 Add post
               </DialogTitle>
               <Divider />
-              <DialogContent sx={{ p: 2 }}>
+              <DialogContent sx={{ p: 2, overflowY: 'initial' }}>
                 <DialogContentText>
                   Share ideas with your friends with just one click!
                 </DialogContentText>
@@ -113,6 +119,43 @@ const Wall = ({ profile, posts: initialPosts }: WallProps) => {
                   maxRows={4}
                   multiline
                   fullWidth
+                />
+                <Field
+                  component={SimpleFileUpload}
+                  name='image'
+                  label={
+                    <Stack rowGap={0.5}>
+                      <Button
+                        size='large'
+                        htmlFor='image'
+                        component='label'
+                        variant='contained'
+                        startIcon={<PhotoCamera />}
+                        sx={{ fontSize: 18.5 }}
+                      >
+                        Upload
+                      </Button>
+                      <Typography marginLeft={1.75} noWrap>
+                        {inputRef.current?.files?.[0]?.name}
+                      </Typography>
+                    </Stack>
+                  }
+                  InputProps={{
+                    id: 'image',
+                    inputRef,
+                    sx: {
+                      display: 'none',
+                    },
+                  }}
+                  FormControlProps={{
+                    fullWidth: true,
+                    variant: 'standard',
+                    sx: {
+                      mt: 1.5,
+                      minWidth: 112,
+                      maxWidth: 112,
+                    },
+                  }}
                 />
               </DialogContent>
               <DialogActions
@@ -127,11 +170,11 @@ const Wall = ({ profile, posts: initialPosts }: WallProps) => {
                 </Button>
                 <Box sx={{ ml: 2 }}>
                   <LoadingButton
+                    type='submit'
                     loading={isAddingPost}
                     loadingPosition='end'
                     variant='outlined'
                     fullWidth
-                    onClick={submitForm}
                   >
                     Publish
                   </LoadingButton>
@@ -152,7 +195,7 @@ const Wall = ({ profile, posts: initialPosts }: WallProps) => {
         ))}
       </Stack>
     </>
-  );
-};
+  )
+}
 
-export default Wall;
+export default Wall

@@ -1,8 +1,8 @@
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import CommentIcon from '@mui/icons-material/Comment';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import SendIcon from '@mui/icons-material/Send';
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt'
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt'
+import CommentIcon from '@mui/icons-material/Comment'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import SendIcon from '@mui/icons-material/Send'
 import {
   Avatar,
   Badge,
@@ -21,30 +21,30 @@ import {
   Paper,
   Stack,
   Typography,
-} from '@mui/material';
-import { nanoid } from '@reduxjs/toolkit';
-import { formatDistanceToNow } from 'date-fns';
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { TextField } from 'formik-mui';
-import Link from 'next/link';
-import { useState } from 'react';
-import { object, string } from 'yup';
-import { Post as IPost } from '../../models/Post';
-import { User } from '../../models/User';
+} from '@mui/material'
+import { nanoid } from '@reduxjs/toolkit'
+import { formatDistanceToNow } from 'date-fns'
+import { Field, Form, Formik, FormikHelpers } from 'formik'
+import { TextField } from 'formik-mui'
+import Link from 'next/link'
+import { useState } from 'react'
+import { object, string } from 'yup'
+import { Post as IPost } from '../../models/Post'
+import { User } from '../../models/User'
 import {
   useAddCommentMutation,
   useLikeMutation,
   useUnlikeMutation,
-} from '../../RTKQ/api';
+} from '../../RTKQ/api'
 
-const COMMENTS_LIMIT = 2;
+const COMMENTS_LIMIT = 2
 
 type PostProps = Omit<IPost, 'authorId'> & {
-  author: Pick<User, 'id' | 'firstName' | 'lastName'>;
-  action?: CardHeaderProps['action'];
-  profileId: string;
-  profileInitials: string;
-};
+  author: Pick<User, 'id' | 'firstName' | 'lastName'>
+  action?: CardHeaderProps['action']
+  profileId: string
+  profileInitials: string
+}
 
 const Post = ({
   id,
@@ -57,77 +57,74 @@ const Post = ({
   profileInitials,
   ...props
 }: PostProps) => {
-  const [comments, setComments] = useState<any>(props.comments);
-  const [commentsOffset, setCommentsOffset] = useState(COMMENTS_LIMIT);
+  const [comments, setComments] = useState<any>(props.comments)
+  const [commentsOffset, setCommentsOffset] = useState(COMMENTS_LIMIT)
 
-  const [likes, setLikes] = useState(props.likes);
+  const [likes, setLikes] = useState(props.likes)
 
-  const [areCommentsExpanded, setAreCommentsExpanded] = useState(false);
+  const [areCommentsExpanded, setAreCommentsExpanded] = useState(false)
 
   const handleCommentIconClick = () => {
-    setAreCommentsExpanded(!areCommentsExpanded);
-    if (!areCommentsExpanded) setCommentsOffset(COMMENTS_LIMIT);
-  };
+    setAreCommentsExpanded(!areCommentsExpanded)
+    if (!areCommentsExpanded) setCommentsOffset(COMMENTS_LIMIT)
+  }
 
   const isShowMoreCommentsLinkVisible =
-    comments.slice(commentsOffset, commentsOffset + COMMENTS_LIMIT).length !==
-    0;
+    comments.slice(commentsOffset, commentsOffset + COMMENTS_LIMIT).length !== 0
 
   const handleShowMoreCommentsLinkClick = () =>
     setCommentsOffset(
       (previousCommentsOffset) => previousCommentsOffset + COMMENTS_LIMIT
-    );
+    )
 
-  const [addComment, { isLoading: isAddingComment }] = useAddCommentMutation();
+  const [addComment, { isLoading: isAddingComment }] = useAddCommentMutation()
 
   const handleAddComment = async (
     { comment }: { comment: string },
     {
       resetForm,
     }: FormikHelpers<{
-      comment: string;
+      comment: string
     }>
   ) => {
-    const commentId = nanoid();
+    const commentId = nanoid()
     setComments((previousComments: any) => [
       { id: commentId, author, content: comment, createdAt: new Date() },
       ...previousComments,
-    ]);
+    ])
     try {
-      await addComment({ postId: id, content: comment }).unwrap();
-      resetForm();
+      await addComment({ postId: id, content: comment }).unwrap()
+      resetForm()
     } catch (error) {
       setComments((previousComments: any) =>
         previousComments.filter((comment: any) => comment.id !== commentId)
-      );
+      )
     }
-  };
+  }
 
-  const [like] = useLikeMutation();
+  const [like] = useLikeMutation()
 
   const handleLike = async () => {
-    setLikes((likes) => [profileId, ...likes]);
+    setLikes((likes) => [profileId, ...likes])
     try {
-      await like({ postId: id }).unwrap();
+      await like({ postId: id }).unwrap()
     } catch (error) {
-      setLikes((likes) => likes.filter((like) => like !== profileId));
+      setLikes((likes) => likes.filter((like) => like !== profileId))
     }
-  };
+  }
 
-  const [unlike] = useUnlikeMutation();
+  const [unlike] = useUnlikeMutation()
 
   const handleUnlike = async () => {
-    setLikes((likes) => likes.filter((like) => like !== profileId));
+    setLikes((likes) => likes.filter((like) => like !== profileId))
     try {
-      await unlike({ postId: id }).unwrap();
+      await unlike({ postId: id }).unwrap()
     } catch (error) {
-      setLikes((likes) => [profileId, ...likes]);
+      setLikes((likes) => [profileId, ...likes])
     }
-  };
+  }
 
-  const handleLikeToggle = likes.includes(profileId)
-    ? handleUnlike
-    : handleLike;
+  const handleLikeToggle = likes.includes(profileId) ? handleUnlike : handleLike
 
   return (
     <Card elevation={4}>
@@ -162,12 +159,7 @@ const Post = ({
           </Typography>
         }
       />
-      {imageUrl && (
-        <CardMedia
-          component='img'
-          image='https://images.pexels.com/photos/13386712/pexels-photo-13386712.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-        />
-      )}
+      {imageUrl && <CardMedia component='img' image={`/images/${imageUrl}`} />}
       <CardContent sx={{ py: imageUrl ? 2 : 0 }}>
         <Typography>{content}</Typography>
       </CardContent>
@@ -327,7 +319,7 @@ const Post = ({
         </CardContent>
       </Collapse>
     </Card>
-  );
-};
+  )
+}
 
-export default Post;
+export default Post
